@@ -1,0 +1,1921 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מדריך יפן ללא גלוטן — מאוחד</title>
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0; height:100%; font-family:"Segoe UI","Assistant","Heebo",Arial,sans-serif; background:#0f1b33;}
+  .topbar{position:sticky; top:0; z-index:50; background:linear-gradient(135deg,#12294d,#1b3a6b);
+    color:#fff; padding:8px 12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .topbar .brand{font-weight:800; font-size:15px; white-space:nowrap; margin-inline-end:6px;}
+  .topnav{display:flex; gap:6px; flex-wrap:wrap;}
+  .topnav button{border:none; background:rgba(255,255,255,.14); color:#fff; font-weight:700; font-size:14px;
+    padding:8px 14px; border-radius:10px; cursor:pointer; font-family:inherit; white-space:nowrap;}
+  .topnav button.active{background:#fff; color:#1b3a6b;}
+  .stage{position:relative; height:calc(100vh - 52px); background:#f5f7fa;}
+  .pane{position:absolute; inset:0; width:100%; height:100%; border:0; display:none; background:#f5f7fa;}
+  .pane.active{display:block;}
+  @media(max-width:600px){ .topbar .brand{display:none;} .topnav button{font-size:13px; padding:7px 11px;} }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <span class="brand">🇯🇵 יפן 2026 · ללא גלוטן</span>
+  <div class="topnav">
+  <button class="active" data-k="overview">🗂️ דף מרכז</button>
+  <button class="" data-k="ok">🍜 אוסקה + קיוטו</button>
+  <button class="" data-k="si">🚗 שיזואוקה + איזו</button>
+  <button class="" data-k="tk">🎌 טוקיו</button>
+  <button class="" data-k="noa">🍃 כרטיס נועה</button>
+  <button class="" data-k="journal">📸 יומן המסע</button>
+  </div>
+</div>
+<div class="stage">
+<iframe class="pane active" id="pane-overview" srcdoc="<!DOCTYPE html>
+<html lang=&quot;he&quot; dir=&quot;rtl&quot;>
+<head>
+<meta charset=&quot;UTF-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+<title>יפן 2026 — דף מרכז + צ׳ק-ליסט הזמנות</title>
+<style>
+  :root{--ink:#1f2937;--muted:#5b6675;--line:#e2e8f0;--bg:#f5f7fa;--navy:#1b3a6b;--navy2:#264d86;
+    --sky:#e8f0fb;--green:#137a4b;--greenbg:#e4f5ec;--red:#b23b3b;--amber:#9a6a00;--amberbg:#fdf3dd;
+    --shadow:0 2px 10px rgba(20,40,80,.08);}
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:&quot;Segoe UI&quot;,&quot;Assistant&quot;,&quot;Heebo&quot;,Arial,&quot;Noto Sans Hebrew&quot;,sans-serif;line-height:1.7;direction:rtl;text-align:right;}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 16px 60px;}
+  header.hero{background:linear-gradient(135deg,#1b3a6b,#3a6ea5);color:#fff;padding:28px 16px;}
+  header.hero .inner{max-width:1000px;margin:0 auto;}
+  header.hero h1{margin:0 0 6px;font-size:25px;font-weight:800;}
+  header.hero p{margin:2px 0;color:#d6e3f7;font-size:15px;}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:16px 0;box-shadow:var(--shadow);}
+  .panel h2{font-size:19px;margin:0 0 12px;color:var(--navy);}
+  table{width:100%;border-collapse:collapse;font-size:14px;}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;}
+  th{background:var(--sky);color:var(--navy);font-weight:800;}
+  tr:last-child td{border-bottom:none;}
+  .nights{font-weight:800;color:var(--navy2);}
+  .mode{font-size:12px;background:var(--sky);color:var(--navy);border-radius:20px;padding:2px 9px;font-weight:700;}
+  .mode.car{background:var(--greenbg);color:var(--green);}
+
+  .grp{margin:14px 0 4px;font-weight:800;color:var(--navy);font-size:15px;border-bottom:2px solid var(--sky);padding-bottom:3px;}
+  .chk{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--line);border-radius:10px;margin:7px 0;background:#fff;cursor:pointer;transition:.15s;}
+  .chk:hover{background:#fbfcfe;}
+  .chk.done{background:var(--greenbg);border-color:#bfe6cf;}
+  .chk.done .txt{text-decoration:line-through;color:var(--muted);}
+  .box{width:22px;height:22px;border:2px solid var(--navy2);border-radius:6px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:15px;}
+  .chk.done .box{background:var(--green);border-color:var(--green);}
+  .txt{font-size:14px;} .txt b{color:var(--ink);}
+  .txt small{color:var(--muted);font-size:12.5px;}
+  .prog{font-size:13px;color:var(--muted);margin:2px 0 10px;}
+  .prog b{color:var(--green);}
+  .pill{display:inline-block;background:var(--sky);color:var(--navy);border-radius:20px;padding:2px 10px;font-size:12.5px;font-weight:700;margin:2px 3px;}
+  .pill.no{background:var(--amberbg);color:var(--amber);}
+  .note{font-size:13px;color:var(--muted);background:#fbfcfe;border:1px dashed var(--line);border-radius:10px;padding:10px 12px;margin-top:10px;}
+  .foot{font-size:12.5px;color:var(--muted);text-align:center;margin-top:24px;}
+  @media print{.chk{background:#fff!important;}}
+</style>
+</head>
+<body>
+<header class=&quot;hero&quot;><div class=&quot;inner&quot;>
+  <h1>יפן 2026 — דף מרכז</h1>
+  <p>17 בספטמבר – 5 באוקטובר 2026 · 18 לילות · משפחה בת 5 · פתרונות ללא גלוטן לנועה</p>
+  <p>ריכוז של שלושת המדריכים: ציר זמן, צ׳ק‑ליסט הזמנות, ועוגני אוכל מרכזיים</p>
+</div></header>
+
+<div class=&quot;wrap&quot;>
+
+<div class=&quot;panel&quot;>
+  <h2>🗺️ ציר הזמן — 7 בסיסי לינה</h2>
+  <table>
+    <tr><th>#</th><th>תאריכים</th><th>אזור</th><th>מלון</th><th>לילות</th><th>תחבורה</th></tr>
+    <tr><td>1</td><td>17–19.9</td><td>אוסקה</td><td>Royal Park Iconic Midosuji</td><td class=&quot;nights&quot;>2</td><td><span class=&quot;mode&quot;>רכבת</span></td></tr>
+    <tr><td>2</td><td>19–23.9</td><td>קיוטו</td><td>Mitsui Garden Sanjo Premier</td><td class=&quot;nights&quot;>4</td><td><span class=&quot;mode&quot;>רכבת</span></td></tr>
+    <tr><td>3</td><td>23–24.9</td><td>שיזואוקה</td><td>Hotel Associa Shizuoka</td><td class=&quot;nights&quot;>1</td><td><span class=&quot;mode car&quot;>רכב 15:00</span></td></tr>
+    <tr><td>4</td><td>24–26.9</td><td>יאיזו</td><td>Migiwaya (ריוקאן)</td><td class=&quot;nights&quot;>2</td><td><span class=&quot;mode car&quot;>רכב</span></td></tr>
+    <tr><td>5</td><td>26–27.9</td><td>טוֹאי (איזו מערב)</td><td>Musouan Biwa (ריוקאן)</td><td class=&quot;nights&quot;>1</td><td><span class=&quot;mode car&quot;>רכב</span></td></tr>
+    <tr><td>6</td><td>27–29.9</td><td>אטגאווה (איזו מזרח)</td><td>IZU RETREAT SUIKO (ריוקאן)</td><td class=&quot;nights&quot;>2</td><td><span class=&quot;mode car&quot;>רכב</span></td></tr>
+    <tr><td>7</td><td>29.9–5.10</td><td>טוקיו</td><td>Mitsui Garden Nihonbashi Premier</td><td class=&quot;nights&quot;>6</td><td><span class=&quot;mode&quot;>רכבת</span></td></tr>
+  </table>
+  <div class=&quot;note&quot;>רכב: איסוף תחנת שיזואוקה 23.9 בשעה 15:00 → החזרה תחנת אודוארה 29.9 בשעה 15:00, ואז שינקנסן לטוקיו.</div>
+</div>
+
+<div class=&quot;panel&quot;>
+  <h2>✅ צ׳ק-ליסט הזמנות ופעולות</h2>
+  <div class=&quot;prog&quot; id=&quot;prog&quot;></div>
+
+  <div class=&quot;grp&quot;>🚗 רכב, מעבורת ורישוי</div>
+  <div class=&quot;chk&quot;><div class=&quot;box&quot;></div><div class=&quot;txt&quot;><b>רישיון בין‑לאומי (IDP) פורמט 1949</b> מ‑ממס&quot;י + רישיון ישראלי + דרכון <small>(לשאת שלושתם ברכב; לא פורמט וינה 1968)</small></div></div>
+
+  <div class=&quot;grp&quot;>🏯 פניות צליאק לריוקאנים (נוסח יפני מוכן בקטע 2)</div>
+  <div class=&quot;chk&quot;><div class=&quot;box&quot;></div><div class=&quot;txt&quot;><b>IZU RETREAT SUIKO</b> — אימייל <b>suiko@okcs.co.jp</b> <small>ערב+בוקר, &quot;אלרגיית חיטה חמורה&quot;; הכי טוב מהשלושה</small></div></div>
+  <div class=&quot;chk&quot;><div class=&quot;box&quot;></div><div class=&quot;txt&quot;><b>Migiwaya</b> — טלפון 054-628-3155 <small>אין מדיניות מפורסמת — לאשר טלפונית</small></div></div>
+  <div class=&quot;chk&quot;><div class=&quot;box&quot;></div><div class=&quot;txt&quot;><b>Musouan Biwa</b> — מוקד 050-5805-9386 <small>לבקש הסרת חיטה מלאה בכתב</small></div></div>
+
+  <div class=&quot;grp&quot;>🎟️ הזמנות אטרקציות טוקיו (כרטיס לפי שעה)</div>
+  <div class=&quot;chk&quot;><div class=&quot;box&quot;></div><div class=&quot;txt&quot;><b>Ghibli Museum מיטاكا</b> <small>Lawson, ~חודש מראש, נחטף תוך דקות; סגור ג׳</small></div></div>
+  <div class=&quot;chk&quot;><div class=&quot;box&quot;></div><div class=&quot;txt&quot;><b>Shibuya Sky</b> <small>משבצת שקיעה</small></div></div>
+  <div class=&quot;chk&quot;><div class=&quot;box&quot;></div><div class=&quot;txt&quot;><b>teamLab Planets</b> (טויוסו) ו‑<b>Borderless</b> (אזאבודאי)</div></div>
+  <div class=&quot;chk&quot;><div class=&quot;box&quot;></div><div class=&quot;txt&quot;><b>Pokémon Café</b> ניהונבאשי <small>31 יום מראש</small></div></div>
+
+  <div class=&quot;grp&quot;>🍽️ הזמנות מסעדות GF לנועה</div>
+  <div class=&quot;chk&quot;><div class=&quot;box&quot;></div><div class=&quot;txt&quot;>אוסקה — <b>VIM</b> <small>6 מקומות, עד חודש מראש</small></div></div>
+  <div class=&quot;chk&quot;><div class=&quot;box&quot;></div><div class=&quot;txt&quot;>קיוטו — <b>Teppan Tenamonya</b> (14 יום, ישיבת 17:00) · <b>Shigetsu</b> (טלפון) · <b>UNO / Kikyo</b> (רצוי)</div></div>
+  <div class=&quot;chk&quot;><div class=&quot;box&quot;></div><div class=&quot;txt&quot;>טוקיו — <b>Kushiage Su</b> · <b>Tempura Asakusa SAKURA</b> · <b>Otsuna Sushi</b></div></div>
+
+  <div class=&quot;grp&quot;>🎒 הצטיידות</div>
+  <div class=&quot;chk&quot;><div class=&quot;box&quot;></div><div class=&quot;txt&quot;><b>כרטיס אלרגיה של נועה</b> — מודפס + בנייד <small>(הקובץ הנפרד)</small></div></div>
+  <div class=&quot;chk&quot;><div class=&quot;box&quot;></div><div class=&quot;txt&quot;><b>טמארי ללא גלוטן</b> — לקנות &quot;Denemon&quot; ב‑Seijo Ishii (אוסקה יום 1 / טוקיו) <small>בקבוק נסיעה לכל ארוחה</small></div></div>
+  <div class=&quot;chk&quot;><div class=&quot;box&quot;></div><div class=&quot;txt&quot;><b>eSIM לנתונים</b> <small>לניווט Google Maps ברכב ובעיר</small></div></div>
+  <div class=&quot;note&quot;>הסימון נשמר רק בחלון הזה (לא בין מכשירים). להדפסה: תפריט הדפדפן → הדפס.</div>
+</div>
+
+<div class=&quot;panel&quot;>
+  <h2>🍜 עוגני אוכל ללא גלוטן — לפי עיר (מטבחים ייעודיים)</h2>
+  <div class=&quot;grp&quot;>אוסקה</div>
+  <p><span class=&quot;pill&quot;>Engine Ramen</span><span class=&quot;pill&quot;>Comeconoco (מאפייה)</span><span class=&quot;pill&quot;>OKO (טאקויאקי)</span><span class=&quot;pill&quot;>VIM (אוקונומיאקי)</span></p>
+  <div class=&quot;grp&quot;>קיוטו</div>
+  <p><span class=&quot;pill&quot;>UNO Ramen ×2</span><span class=&quot;pill&quot;>Toshoan (קינוח)</span><span class=&quot;pill&quot;>Sugarhill (טריאקי)</span><span class=&quot;pill&quot;>Café &amp; Bar Maru</span></p>
+  <div class=&quot;grp&quot;>שיזואוקה / איזו (כפרי)</div>
+  <p><span class=&quot;pill no&quot;>אין מסעדה ייעודית</span> → ריוקאן מתואם + הטמארי של נועה + סשימי/סופר</p>
+  <div class=&quot;grp&quot;>טוקיו</div>
+  <p><span class=&quot;pill&quot;>Oh Nana!</span><span class=&quot;pill&quot;>T's Kitchen ×3</span><span class=&quot;pill&quot;>Kushiage Su</span><span class=&quot;pill&quot;>Tempura Asakusa SAKURA</span><span class=&quot;pill&quot;>Otsuna Sushi</span></p>
+  <div class=&quot;note&quot;>מטבח ייעודי 100% GF = הבחירה הבטוחה ביותר לנועה (אין זיהום צולב). הפירוט המלא עם מפות ושעות — בשלושת המדריכים לפי קטע.</div>
+</div>
+
+<div class=&quot;panel&quot;>
+  <h2>🧭 לוגיסטיקה בקצרה</h2>
+  <p><b>קנסאי (אוסקה→קיוטו):</b> רכבת/מטרו + הליכה. <b>שבוע הרכב:</b> איסוף שיזואוקה 15:00 → נסיעה יבשתית לטוֹאי → חציית איזו (מפלי Joren + גשר Kawazu) → החזרה אודוארה 15:00 → שינקנסן לטוקיו. <b>טוקיו:</b> קו יאמאנוטה מקאנדה מחבר הכול; בסיס ניהונבאשי מרכזי.</p>
+  <p class=&quot;note&quot;>מזג אוויר: סוף ספטמבר = עונת טייפונים (עלול לשבש מעבורת/חוף); פוג׳י לרוב מעונן — בונוס אם מתגלה. תחילת אוקטובר בטוקיו נעים, טרם שלכת.</p>
+</div>
+
+<p class=&quot;foot&quot;>דף מרכז · מלווה את שלושת המדריכים המפורטים (אוסקה+קיוטו · שיזואוקה+איזו · טוקיו). מחקר מאומת אוגוסט 2026 — לאמת שעות/כרטיסים סמוך לנסיעה.</p>
+</div>
+
+<script>
+var chks=document.querySelectorAll('.chk');
+function upd(){var d=document.querySelectorAll('.chk.done').length;
+  document.getElementById('prog').innerHTML='הושלמו <b>'+d+'</b> מתוך '+chks.length+' פעולות';}
+chks.forEach(function(c){c.addEventListener('click',function(){c.classList.toggle('done');
+  var b=c.querySelector('.box');b.textContent=c.classList.contains('done')?'✓':'';upd();});});
+upd();
+</script>
+</body>
+</html>
+" title="🗂️ דף מרכז"></iframe>
+<iframe class="pane " id="pane-ok" srcdoc="<!DOCTYPE html>
+<html lang=&quot;he&quot; dir=&quot;rtl&quot;>
+<head>
+<meta charset=&quot;UTF-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+<title>מדריך יפן ללא גלוטן — קטע 1: אוסקה + קיוטו</title>
+<style>
+  :root{
+    --navy:#1b3a6b; --navy2:#264d86; --sky:#e8f0fb; --ink:#1f2937; --muted:#5b6675;
+    --line:#e2e8f0; --bg:#f5f7fa; --card:#ffffff;
+    --green:#137a4b; --greenbg:#e4f5ec;
+    --teal:#0d6d78; --tealbg:#e2f4f6;
+    --amber:#9a6a00; --amberbg:#fdf3dd;
+    --red:#b23b3b; --redbg:#fbe8e8;
+    --shadow:0 2px 10px rgba(20,40,80,.07);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:&quot;Segoe UI&quot;,&quot;Assistant&quot;,&quot;Heebo&quot;,Arial,&quot;Noto Sans Hebrew&quot;,sans-serif;
+    line-height:1.7; font-size:16px; direction:rtl; text-align:right;
+  }
+  a{color:var(--navy2);}
+  .wrap{max-width:1020px; margin:0 auto; padding:0 16px 60px;}
+
+  header.hero{
+    background:linear-gradient(135deg,var(--navy),var(--navy2));
+    color:#fff; padding:30px 16px 26px; text-align:right;
+  }
+  header.hero .inner{max-width:1020px; margin:0 auto;}
+  header.hero h1{margin:0 0 6px; font-size:26px; font-weight:800;}
+  header.hero p{margin:2px 0; color:#d6e3f7; font-size:15px;}
+  .hero-stats{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;}
+  .hero-stats .stat{background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18);
+    border-radius:12px; padding:8px 14px; font-size:14px;}
+  .hero-stats .stat b{display:block; font-size:18px;}
+
+  nav.tabs{position:sticky; top:0; z-index:20; background:#fff; border-bottom:1px solid var(--line);
+    box-shadow:var(--shadow); display:flex; gap:6px; padding:8px 16px; overflow-x:auto;}
+  nav.tabs button{
+    border:none; background:var(--sky); color:var(--navy); font-weight:700; font-size:15px;
+    padding:9px 16px; border-radius:10px; cursor:pointer; white-space:nowrap; font-family:inherit;
+  }
+  nav.tabs button.active{background:var(--navy); color:#fff;}
+
+  section.city{display:none; padding-top:22px;}
+  section.city.active{display:block;}
+
+  h2.city-title{font-size:22px; margin:6px 0 2px; color:var(--navy);}
+  .city-sub{color:var(--muted); margin:0 0 16px; font-size:14px;}
+
+  .panel{background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:16px 18px; margin:14px 0; box-shadow:var(--shadow);}
+  .panel h3{margin:0 0 10px; font-size:18px; color:var(--navy); display:flex; align-items:center; gap:8px;}
+  .panel h4{margin:14px 0 6px; font-size:15px; color:var(--navy2);}
+
+  .rules{background:var(--amberbg); border:1px solid #f0d999;}
+  .rules ul{margin:6px 0 0; padding-inline-start:20px;}
+  .rules li{margin:5px 0;}
+  .kanji{background:#fff; border:1px dashed #d9b25a; border-radius:8px; padding:2px 7px;
+    font-weight:700; display:inline-block; margin:0 2px;}
+
+  /* day plan */
+  .day{border-inline-start:4px solid var(--navy2); background:#fff; border:1px solid var(--line);
+    border-inline-start-width:4px; border-radius:12px; padding:12px 14px; margin:10px 0;}
+  .day .dhead{font-weight:800; color:var(--navy); font-size:15px;}
+  .day .dtag{font-size:12px; background:var(--sky); color:var(--navy); border-radius:20px;
+    padding:2px 10px; margin-inline-start:8px; font-weight:700;}
+  .day ol{margin:8px 0 0; padding-inline-start:20px;}
+  .day ol li{margin:5px 0;}
+
+  /* place cards */
+  .cards{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  @media(max-width:720px){.cards{grid-template-columns:1fr;}}
+  .card{background:#fff; border:1px solid var(--line); border-radius:13px; padding:13px 14px;
+    box-shadow:var(--shadow); display:flex; flex-direction:column;}
+  .card .top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
+  .card .nm{font-weight:800; font-size:16px; color:var(--ink); margin:0;}
+  .card .jp{font-size:12px; color:var(--muted); font-weight:600;}
+  .badge{font-size:11.5px; font-weight:800; padding:3px 9px; border-radius:20px; white-space:nowrap;}
+  .b-ded{background:var(--greenbg); color:var(--green);}
+  .b-aware{background:var(--tealbg); color:var(--teal);}
+  .b-back{background:var(--amberbg); color:var(--amber);}
+  .b-view{background:var(--redbg); color:var(--red);}
+  .card .meta{font-size:13px; color:var(--muted); margin:7px 0 0;}
+  .card .meta b{color:var(--ink);}
+  .card .how{font-size:13.5px; margin:8px 0 0; background:var(--sky); border-radius:9px; padding:8px 10px;}
+  .card .flags{font-size:12.5px; color:var(--red); margin:7px 0 0;}
+  .card .foot{display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:auto; padding-top:10px;}
+  .maplink{background:var(--navy); color:#fff; text-decoration:none; font-weight:700; font-size:13px;
+    padding:7px 12px; border-radius:9px; display:inline-flex; gap:6px; align-items:center;}
+  .verify{font-size:11.5px; color:var(--muted);}
+
+  .legend{display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 4px;}
+  .legend .badge{cursor:default;}
+  .rangehdr{font-size:16px; font-weight:800; color:var(--navy); margin:18px 0 4px; padding-bottom:4px;
+    border-bottom:2px solid var(--sky);}
+  .rangehdr small{font-weight:600; color:var(--muted); font-size:12.5px;}
+
+  .attr{background:#fff; border:1px solid var(--line); border-radius:12px; padding:11px 13px; margin:9px 0;}
+  .attr .an{font-weight:800; color:var(--ink);}
+  .attr .aw{font-size:13.5px; color:var(--muted); margin-top:3px;}
+  .attr .gf{font-size:12.5px; color:var(--green); margin-top:4px;}
+  .attr .st{font-size:12px; color:var(--navy2); font-weight:700; margin-top:3px;}
+
+  .note{font-size:13px; color:var(--muted); background:#fbfcfe; border:1px dashed var(--line);
+    border-radius:10px; padding:10px 12px; margin-top:10px;}
+  .foot-disc{font-size:12.5px; color:var(--muted); margin-top:26px; text-align:center;}
+  details.src{margin-top:10px;} details.src summary{cursor:pointer; font-weight:700; color:var(--navy2); font-size:13px;}
+  details.src a{display:block; font-size:12px; margin:3px 0; word-break:break-all;}
+</style>
+</head>
+<body>
+
+<header class=&quot;hero&quot;>
+  <div class=&quot;inner&quot;>
+    <h1>מדריך יפן ללא גלוטן — קטע 1</h1>
+    <p>אוסקה &amp;nbsp;·&amp;nbsp; קיוטו &amp;nbsp;|&amp;nbsp; 17–23 בספטמבר 2026</p>
+    <p>משפחה בת 5 · דגש על פתרונות מעשיים ובטוחים לבת הצליאקית · טווח קצר (3 ק״מ) וטווח בינוני (10 ק״מ)</p>
+    <div class=&quot;hero-stats&quot;>
+      <div class=&quot;stat&quot;><b>2</b> לילות באוסקה</div>
+      <div class=&quot;stat&quot;><b>4</b> לילות בקיוטו</div>
+      <div class=&quot;stat&quot;><b>תחבורה</b> רכבת + הליכה</div>
+      <div class=&quot;stat&quot;><b>עונה</b> תחילת סתיו (ירוק, טרם שלכת)</div>
+    </div>
+  </div>
+</header>
+
+<nav class=&quot;tabs&quot;>
+  <button class=&quot;active&quot; data-t=&quot;rules&quot;>כללי זהב לצליאק</button>
+  <button data-t=&quot;osaka&quot;>אוסקה</button>
+  <button data-t=&quot;kyoto&quot;>קיוטו</button>
+</nav>
+
+<div class=&quot;wrap&quot;>
+
+<!-- ============ RULES ============ -->
+<section class=&quot;city active&quot; id=&quot;rules&quot;>
+  <h2 class=&quot;city-title&quot;>כללי זהב — אכילה ללא גלוטן ביפן</h2>
+  <p class=&quot;city-sub&quot;>הבסיס לכל הקטעים. שמור אותם בהישג יד; הם נכונים לכל עיר בטיול.</p>
+
+  <div class=&quot;panel rules&quot;>
+    <h3>⚠️ הסכנה מספר 1: סויה ומיסו</h3>
+    <p>רוב <b>רוטב הסויה (שוֹיוּ)</b> ו<b>המיסו</b> ביפן מיוצרים עם <b>חיטה</b> — והם נמצאים כמעט בכל מנה מבושלת, רוטב, מרינדה, טריאקי ורוטב צלייה. זו המלכודת המרכזית.</p>
+    <ul>
+      <li><b>לשאת טַמַארי ללא גלוטן</b> (רוטב סויה נטול חיטה) בבקבוק נסיעה — לסושי, אורז ובשר. קונים בסופר עוד באוסקה (ראו סעיף אוסקה).</li>
+      <li><b>לבקש הכנה עם מלח בלבד</b> — ביפנית &quot;שיוֹ&quot; (塩) — במקום רוטב.</li>
+      <li><b>מרק מיסו ודאשי</b> — לרוב לא בטוחים (מוסיפים שוֹיוּ). לשאול תמיד.</li>
+      <li><b>טמפורה, גיוזה, אודון, &quot;בשר סרטן&quot;</b> — חיטה. <b>סובה</b> — בטוח רק אם 100% כוסמת (juwari 十割).</li>
+      <li><b>סושי</b> — האורז והחומץ בד״כ בטוחים; הסכנה היא הסויה ורוטב הצלופח → להשתמש בטמארי של נועה.</li>
+    </ul>
+    <h4>קאנג׳י לזיהוי על אריזות (סרקו עם Google Translate):</h4>
+    <p><span class=&quot;kanji&quot;>小麦 = חיטה</span> <span class=&quot;kanji&quot;>醤油 = רוטב סויה</span> <span class=&quot;kanji&quot;>塩 = מלח (בטוח)</span></p>
+  </div>
+
+  <div class=&quot;panel&quot;>
+    <h3>🎴 ערכת הישרדות לבת הצליאקית</h3>
+    <ul>
+      <li><b>כרטיס אלרגיה ביפנית</b> — להדפיס מראש (celiactravel.com/cards). ביפן מעשי יותר לומר &quot;אלרגיה לחיטה&quot; מ&quot;צליאק&quot;. להגיש בכל מקום שאינו ייעודי.</li>
+      <li><b>עדיפות למקומות ייעודיים 100% ללא גלוטן</b> — שם אין זיהום צולב. אלה הארוחות ה&quot;בטוחות באמת&quot;.</li>
+      <li><b>גיבוי יומיומי — קומביני:</b> אוניגירי מלח (塩むすび), אוניגירי סלמון/אומבושי, ביצה קשה מסומנת 塩, חטיפי SOYJOY, פירות. <span style=&quot;color:var(--red)&quot;>להימנע:</span> עוף מטוגן, אודן, כריכים, בנטו ברוטב, אוניגירי טונה‑מיונז/בשר.</li>
+      <li><b>לאמת יום‑יומיים לפני</b> — מקומות קטנים ביפן משנים שעות/ימי סגירה. בדקו ב‑Google Maps לפני שיוצאים.</li>
+    </ul>
+  </div>
+
+  <div class=&quot;panel&quot;>
+    <h3>🟢 מקרא רמות בטיחות</h3>
+    <div class=&quot;legend&quot;>
+      <span class=&quot;badge b-ded&quot;>מטבח ייעודי 100% ללא גלוטן</span>
+      <span class=&quot;badge b-aware&quot;>מודע לצליאק · בהזמנה מראש</span>
+      <span class=&quot;badge b-back&quot;>גיבוי · סופר / קומביני</span>
+      <span class=&quot;badge b-view&quot;>לצפייה בלבד · לא לאכול</span>
+    </div>
+    <p class=&quot;note&quot;>כל המקומות במדריך אומתו כפעילים נכון לאוגוסט 2026 מול מקורות אמינים (ראו &quot;מקורות&quot; בכל עיר). מקומות קטנים — כדאי לאמת שוב סמוך לביקור.</p>
+  </div>
+</section>
+
+<!-- ============ OSAKA ============ -->
+<section class=&quot;city&quot; id=&quot;osaka&quot;>
+  <h2 class=&quot;city-title&quot;>אוסקה · 17–19.9</h2>
+  <p class=&quot;city-sub&quot;>מלון: <b>The Royal Park Hotel Iconic Osaka Midosuji</b> · שכונת היראנומאצ׳י (יודויאבאשי/הונמאצ׳י), מרכז אוסקה · תחנות: יודויאבאשי (3 דק׳) והונמאצ׳י (4 דק׳) על קו מידוסוג׳י.</p>
+
+  <div class=&quot;panel&quot;>
+    <h3>📍 למה זה מיקום מצוין לצליאק</h3>
+    <p>שני מטבחים ייעודיים 100% ללא גלוטן (ראמן <b>Engine</b> ומאפייה <b>Comeconoco</b>) וגם סניף <b>Seijo Ishii</b> עם מוצרים ללא גלוטן — כולם ברדיוס ~1.5 ק״מ. וכל ליבת השופינג/פופ‑קלצ׳ר (שינסאיבאשי, נמבה, דֶן‑דֶן טאון) היא נסיעה ישירה דרומה בקו מידוסוג׳י, בלי החלפות.</p>
+  </div>
+
+  <div class=&quot;panel&quot;>
+    <h3>🗓️ מסלול מוצע</h3>
+    <div class=&quot;day&quot;>
+      <span class=&quot;dhead&quot;>יום ה׳ 17.9 — הגעה (אחה״צ)</span><span class=&quot;dtag&quot;>רגוע · טווח קצר</span>
+      <ol>
+        <li>צ׳ק‑אין ורגיעה. טיול ערב בפארק <b>נאקאנושימה</b> (5 דק׳ הליכה צפונה) — טיילת נהר, גן ורדים ואולם העירייה ההיסטורי.</li>
+        <li>ארוחת ערב: <b>Engine Ramen</b> (8 דק׳ הליכה) — ראמן ללא גלוטן במטבח ייעודי. <span style=&quot;color:var(--red)&quot;>שימו לב: VIM סגור בימי חמישי.</span></li>
+        <li>גיבוי: קומביני מתחת למלון לארוחת בוקר בטוחה למחר.</li>
+      </ol>
+    </div>
+    <div class=&quot;day&quot;>
+      <span class=&quot;dhead&quot;>יום ו׳ 18.9 — יום מלא</span><span class=&quot;dtag&quot;>שופינג + פופ‑קלצ׳ר</span>
+      <ol>
+        <li>בוקר: קפיצה ל<b>Comeconoco</b> (פתוח ו׳!) — לחם/מאפים ללא גלוטן; קנו מלאי לימים הבאים. בדרך: <b>Seijo Ishii</b> בטנמאבאשי — קנו בקבוק <b>טמארי</b> ללא גלוטן לכל הטיול.</li>
+        <li>צהריים: קו מידוסוג׳י דרומה ל<b>שינסאיבאשי / נמבה</b> — קניות, וקסם ה&quot;נאון&quot; של דוֹטומבורי (לצפייה). ליד: <b>Den Den Town</b> (אנימה/אלקטרוניקה).</li>
+        <li>אוכל רחוב בטוח: <b>OKO</b> — טאקויאקי ואוקונומיאקי ללא גלוטן (קמח חומוס/אורז) — הדרך היחידה לתת לבת חוויית אוכל רחוב אוסקאית בבטחה.</li>
+        <li>ערב (אופציונלי, בהזמנה מראש): <b>VIM</b> בנמבה — אוקונומיאקי ללא גלוטן, הבעלים צליאק. 6 מקומות בלבד — להזמין עכשיו.</li>
+      </ol>
+    </div>
+    <div class=&quot;day&quot;>
+      <span class=&quot;dhead&quot;>יום ש׳ 19.9 — בוקר, ואז לקיוטו</span><span class=&quot;dtag&quot;>טווח קצר</span>
+      <ol>
+        <li>אופציה לפי כוח: טירת <b>אוסקה</b> והפארק (מזרחה) לתמונות ונוף, או בוקר נוסף בנאקאנושימה.</li>
+        <li>לאסוף אוכל בטוח לדרך מהקומביני/Comeconoco, ואז רכבת לקיוטו (כ‑15 דק׳ בשינקנסן / ~30–45 דק׳ ברכבת מהירה).</li>
+      </ol>
+    </div>
+  </div>
+
+  <h3 class=&quot;rangehdr&quot;>🍽️ אוכל ללא גלוטן — טווח קצר <small>(עד ~3 ק״מ מהמלון)</small></h3>
+  <div class=&quot;cards&quot; id=&quot;osaka-short&quot;></div>
+
+  <h3 class=&quot;rangehdr&quot;>🍽️ אוכל ללא גלוטן — טווח בינוני <small>(עד ~10 ק״מ)</small></h3>
+  <div class=&quot;cards&quot; id=&quot;osaka-med&quot;></div>
+
+  <h3 class=&quot;rangehdr&quot;>🎌 עצירות ואטרקציות</h3>
+  <div id=&quot;osaka-attr&quot;></div>
+
+  <div class=&quot;panel&quot;>
+    <h3>🥢 הערות מעשיות — אוסקה</h3>
+    <p>מאכלי הדגל של אוסקה <b>אינם בטוחים</b> כברירת מחדל: טאקויאקי (בלילת חיטה), אוקונומיאקי (פנקייק חיטה), קושיקאטסו (מטוגן בציפוי חיטה בשמן משותף). דוֹטומבורי/שינסקאי — לצפייה בלבד. <b>אבל</b> יש גרסה בטוחה לכל אחד: <b>OKO</b> (טאקויאקי/אוקונומיאקי ייעודי) ו‑<b>VIM</b> (אוקונומיאקי ייעודי, בעלים צליאק). כאן בונים סביבם את היום — זו הזדמנות לחוויה אותנטית בבטחה.</p>
+    <p><b>שוק Kuromon Ichiba:</b> חוויה נהדרת לשאר המשפחה, אבל לבת — <b>לצפייה בלבד</b>: רוב הפריטים המבושלים ברוטב סויה/גריל משותף. פרי טרי או מוצ׳י אורז בלבד (לשאול).</p>
+    <details class=&quot;src&quot;><summary>מקורות (אוסקה)</summary>
+      <a href=&quot;https://www.gluten-free-japan.com/guide/osaka&quot; target=&quot;_blank&quot;>Gluten-Free Japan — מדריך אוסקה</a>
+      <a href=&quot;https://www.gluten-free-japan.com/restaurants/139&quot; target=&quot;_blank&quot;>Engine Ramen</a>
+      <a href=&quot;https://comeconoco.com/en/&quot; target=&quot;_blank&quot;>Comeconoco (אתר רשמי)</a>
+      <a href=&quot;https://www.gluten-free-japan.com/restaurants/136&quot; target=&quot;_blank&quot;>OKO</a>
+      <a href=&quot;https://autoreserve.com/en/restaurants/PLAtZKaPw9m4uNkhr5Yz&quot; target=&quot;_blank&quot;>VIM (הזמנות)</a>
+      <a href=&quot;https://www.gluten-free-japan.com/guide/convenience-stores&quot; target=&quot;_blank&quot;>מדריך חנויות נוחות</a>
+      <a href=&quot;https://www.royalparkhotels.co.jp/en/ic/osakamidosuji/about/access/index.html&quot; target=&quot;_blank&quot;>גישה למלון (רשמי)</a>
+    </details>
+  </div>
+</section>
+
+<!-- ============ KYOTO ============ -->
+<section class=&quot;city&quot; id=&quot;kyoto&quot;>
+  <h2 class=&quot;city-title&quot;>קיוטו · 19–23.9</h2>
+  <p class=&quot;city-sub&quot;>מלון: <b>Mitsui Garden Hotel Kyoto Sanjo Premier</b> · מרכז קיוטו (נאקאגיו), רחוב סאנג׳ו · תחנה מרכזית: קאראסומה‑אוֹיקֶה (3 דק׳, מפגש שני קווי מטרו).</p>
+
+  <div class=&quot;panel&quot;>
+    <h3>📍 יתרון המיקום</h3>
+    <p>מרכז קיוטו ההליכתי — שוק נישיקי, פונטוצ׳ו ונהר קאמו במרחק 10–20 דק׳ הליכה. אשכול חזק של מקומות ייעודיים ללא גלוטן ברדיוס קצר: שתי מסעדות ראמן <b>UNO</b>, מאפיית <b>Toshoan</b>, ו‑<b>Sugarhill</b> (טריאקי ללא גלוטן).</p>
+  </div>
+
+  <div class=&quot;panel&quot;>
+    <h3>🗓️ מסלול מוצע (מותאם לימי סגירה)</h3>
+    <div class=&quot;day&quot;>
+      <span class=&quot;dhead&quot;>ש׳ 19.9 — הגעה (ערב)</span><span class=&quot;dtag&quot;>טווח קצר</span>
+      <ol>
+        <li>צ׳ק‑אין. קנו בקבוק טמארי ללא גלוטן ב‑<b>Natural House</b> (מרתף Fujii Daimaru, רחוב שיג׳ו) אם עוד לא קניתם באוסקה.</li>
+        <li>ערב: מוזיאון המנגה (400 מ׳!) או טיילת נהר קאמו + פונטוצ׳ו. ארוחה: <b>UNO Sanjo</b> — ראמן ייעודי ללא גלוטן.</li>
+      </ol>
+    </div>
+    <div class=&quot;day&quot;>
+      <span class=&quot;dhead&quot;>א׳ 20.9 — מקדשים ונוף</span><span class=&quot;dtag&quot;>טווח בינוני</span>
+      <ol>
+        <li><b>Fushimi Inari</b> (שערי הטורי האדומים + טיפוס נופי — הבחירה מס׳ 1 לטבע). ליד: קפה <b>Vermillion</b> עם סימון פריטים ללא גלוטן.</li>
+        <li>אחה״צ: גיון, יאסאקה, קיומיזו‑דרה. <span style=&quot;color:var(--red)&quot;>Sugarhill סגור בראשון</span> — לשמור אותו ליום אחר.</li>
+        <li>קינוח בטוח: <b>Waco Crepes</b> (קרפים ייעודיים) באזור גיון.</li>
+      </ol>
+    </div>
+    <div class=&quot;day&quot;>
+      <span class=&quot;dhead&quot;>ב׳ 21.9 — ארשיאמה (טבע) / פופ‑קלצ׳ר</span><span class=&quot;dtag&quot;>טווח בינוני</span>
+      <ol>
+        <li>יער הבמבוק של <b>ארשיאמה</b>, גן טנריו‑ג׳י, גשר טוגטסוקיו, פארק הקופים. אפשר לשלב את <b>Toei Studio Park</b> (פארק סרטי סמוראים — כיף לנוער).</li>
+        <li>צהריים ללא גלוטן שם: <b>Yosiya</b> (תפריט סט ללא גלוטן, בהזמנה) או <b>Shigetsu</b> במקדש (בהזמנה טלפונית מראש).</li>
+        <li>ערב בחזרה במרכז: <b>Sugarhill</b> — טריאקי עוף/דג ללא גלוטן (17:00–22:00).</li>
+      </ol>
+    </div>
+    <div class=&quot;day&quot;>
+      <span class=&quot;dhead&quot;>ג׳ 22.9 — מרכז קיוטו ההיסטורי</span><span class=&quot;dtag&quot;>טווח קצר</span>
+      <ol>
+        <li>טירת <b>ניג׳ו</b>, ואז שוק <b>נישיקי</b> + מעברי Teramachi/Shinkyogoku (שופינג נוער, אנימה, פורי‑קורה). <span style=&quot;color:var(--red)&quot;>נישיקי לבת — לצפייה בלבד.</span></li>
+        <li>ארוחה בטוחה: <b>UNO Gion</b> או <b>Café &amp; Bar Maru</b> (כולל טונקאטסו ללא גלוטן!).</li>
+        <li>קינוח: <b>Toshoan</b> — פנקייק סופלה ללא גלוטן (סגור ד׳, לכן היום מושלם).</li>
+      </ol>
+    </div>
+    <div class=&quot;day&quot;>
+      <span class=&quot;dhead&quot;>ד׳ 23.9 — בוקר, ואז לשיזואוקה</span><span class=&quot;dtag&quot;>טווח קצר</span>
+      <ol>
+        <li>בוקר קצר (קינקאקו‑ג׳י / מוזיאון הרכבות לפי טעם), איסוף אוכל בטוח לדרך, שינקנסן מזרחה לשיזואוקה. <span style=&quot;color:var(--red)&quot;>Toshoan סגור ברביעי.</span></li>
+      </ol>
+    </div>
+  </div>
+
+  <h3 class=&quot;rangehdr&quot;>🍽️ אוכל ללא גלוטן — טווח קצר <small>(עד ~3 ק״מ מהמלון)</small></h3>
+  <div class=&quot;cards&quot; id=&quot;kyoto-short&quot;></div>
+
+  <h3 class=&quot;rangehdr&quot;>🍽️ אוכל ללא גלוטן — טווח בינוני <small>(עד ~10 ק״מ)</small></h3>
+  <div class=&quot;cards&quot; id=&quot;kyoto-med&quot;></div>
+
+  <h3 class=&quot;rangehdr&quot;>🎌 עצירות ואטרקציות</h3>
+  <div id=&quot;kyoto-attr&quot;></div>
+
+  <div class=&quot;panel&quot;>
+    <h3>🍡 קינוחים יפניים (וגאשי) — מה בטוח?</h3>
+    <p><b>בד״כ בטוח</b> (אורז/שעועית, בלי חיטה): מוצ׳י ודאיפוקו, דאנגו פשוט, וראבי‑מוצ׳י, אנמיטסו וג׳לי קאנטן, גלידת מאצ׳ה <b>בכוס</b> (לא בגביע וופל).</p>
+    <p><b>לא בטוח:</b> דוראיאקי, מאנג׳ו, טאיאקי, אנפאן (חיטה); <b>מיטראשי דאנגו</b> — הזיגוג מבוסס סויה (בד״כ חיטה). הכתובת הבטוחה והרגועה לקינוח: <b>Toshoan</b>.</p>
+    <details class=&quot;src&quot;><summary>מקורות (קיוטו)</summary>
+      <a href=&quot;https://www.gardenhotels.co.jp/kyoto-sanjo-premier/eng/access/&quot; target=&quot;_blank&quot;>גישה למלון (רשמי)</a>
+      <a href=&quot;https://www.gluten-free-japan.com/restaurants/145&quot; target=&quot;_blank&quot;>UNO — ראמן ייעודי</a>
+      <a href=&quot;https://en.soymilkramen.com/&quot; target=&quot;_blank&quot;>UNO (אתר רשמי)</a>
+      <a href=&quot;https://www.tripadvisor.com/Restaurant_Review-g298564-d3828636-Reviews-Toshoan-Kyoto_Kyoto_Prefecture_Kinki.html&quot; target=&quot;_blank&quot;>Toshoan</a>
+      <a href=&quot;https://www.tripadvisor.com/Restaurant_Review-g298564-d4081495-Reviews-Sugarhill_Kyoto-Kyoto_Kyoto_Prefecture_Kinki.html&quot; target=&quot;_blank&quot;>Sugarhill</a>
+      <a href=&quot;https://www.endlessdistances.com/gluten-free-kyoto-japan/&quot; target=&quot;_blank&quot;>Endless Distances — GF Kyoto</a>
+      <a href=&quot;https://www.insidekyoto.com/gluten-free-kyoto&quot; target=&quot;_blank&quot;>Inside Kyoto — GF</a>
+    </details>
+  </div>
+</section>
+
+<p class=&quot;foot-disc&quot;>מדריך זה נבנה ממחקר מאומת (אוגוסט 2026) ממקורות ייעודיים לאכילה ללא גלוטן ביפן. מקומות קטנים משנים שעות — אמתו ב‑Google Maps 1–2 ימים לפני כל ביקור. זהו קטע 1 מתוך המסלול המלא.</p>
+</div>
+
+<script>
+// ---- tab switching ----
+document.querySelectorAll('nav.tabs button').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('section.city').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById(b.dataset.t).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+
+// ---- data ----
+function gmap(q){return 'https://www.google.com/maps/search/?api=1&amp;query='+encodeURIComponent(q);}
+var BADGE={ded:['b-ded','מטבח ייעודי 100% ללא גלוטן'],aware:['b-aware','מודע לצליאק · הזמנה מראש'],back:['b-back','גיבוי · סופר/קומביני']};
+
+var DATA={
+ 'osaka-short':[
+   {nm:'Engine Ramen',jp:'エンジンラーメン',lvl:'ded',type:'🍜 ראמן',dist:'~700 מ׳ דרומה (8 דק׳ הליכה)',how:'ראמן אמיתי בבטחה — אטריות אורז ומרק נטול חיטה, כלים בצבעים נפרדים להזמנות ללא גלוטן. אפשר להזמין חופשי; אמרו &quot;צליאק&quot; לאישור.',price:'₪₪ · בינוני',ver:'אומת 8/2026 · Gluten-Free Japan',q:'Engine Ramen Osaka Azuchimachi'},
+   {nm:'Comeconoco',jp:'コメコノコ · מאפייה/קפה',lvl:'ded',type:'🍰 מאפייה/קינוח',dist:'~1.5 ק״מ מזרחה (טנמאבאשי)',how:'לחם, פרנץ׳ טוסט, כריכים ועוגות — הכול מקמח אורז במטבח ייעודי. המקום להצטייד בלחם/חטיפים בטוחים להמשך.',price:'₪₪',ver:'פתוח ד׳–ש׳ 11:00–17:00 · אתר רשמי',q:'Comeconoco Osaka Shimamachi'},
+   {nm:'OKO',jp:'遊べるお好み焼き屋 OKO',lvl:'ded',type:'🐙 אוכל רחוב',dist:'~2.5 ק״מ דרומה (שינסאיבאשי)',how:'טאקויאקי מקמח חומוס ואוקונומיאקי מקמח אורז — &quot;הטאקויאקי הבטוח היחיד באוסקה&quot;. חוויית אוכל רחוב אותנטית בבטחה.',price:'₪ · שעות 11:30–21:00',ver:'אומת 7/2026',q:'OKO okonomiyaki Higashishinsaibashi Osaka'},
+   {nm:'VIM',jp:'ヴィム · אוקונומיאקי',lvl:'ded',type:'🍳 מסעדה (ערב)',dist:'~3 ק״מ דרומה (נמבה, 240 מ׳ מהתחנה)',how:'אוקונומיאקי מקמח אורז, ייעודי, הבעלים צליאק. 6 מקומות בלבד — חובה הזמנה מראש (עד חודש). סגור בחמישי.',price:'₪₪₪ · ~¥4,500 לאדם',ver:'הזמנה חיונית · AutoReserve',q:'VIM gluten free okonomiyaki Namba Osaka'},
+   {nm:'Seijo Ishii — טנמאבאשי',jp:'成城石井 · סופרמרקט',lvl:'back',type:'🛒 סופרמרקט',dist:'~1.5 ק״מ מזרחה (Keihan City Mall)',how:'סופר איכות עם מדף ללא גלוטן: לחם, פסטה, עוגיות, ו⁠־<b>טמארי (סויה ללא גלוטן)</b> — קנו כאן בקבוק נסיעה לכל הטיול. סרקו כל אריזה (小麦).',price:'—',ver:'מלאי משתנה · אמתו במפה',q:'Seijo Ishii Tenmabashi Keihan City Mall'}
+ ],
+ 'osaka-med':[
+   {nm:'FOLK 茶菓 (folksaka)',jp:'קפה/מאפייה ייעודי',lvl:'ded',type:'🍰 קפה/קינוח',dist:'~3 ק״מ צפ‑מע (פוקושימה)',how:'עוגות, בראוניז, לחם וכריכים — ללא גלוטן, ללא חלב/ביצה. &quot;מקלט בטוח לצליאק&quot;. משתלב עם יום באזור אומדה/פוקושימה.',price:'₪₪ · ~11:00–18:00',ver:'אומת 8/2026 · GF Japan',q:'FOLK folksaka Fukushima Osaka gluten free'},
+   {nm:'Matsusakagyu Yakiniku M',jp:'松阪牛焼肉M · יאקיניקו',lvl:'aware',type:'🥩 יאקיניקו יוקרתי',dist:'~3 ק״מ דרומה (הוזנג׳י/נמבה)',how:'בשר מאטסוזאקה במלח בלבד. חובה לבקש <b>גריל נקי נפרד</b> ולהימנע מכל הרטבים (מכילים סויה). מתאים ל&quot;ערב חגיגי&quot; של כל המשפחה.',price:'₪₪₪',ver:'לא ייעודי — לפעול לפי הפרוטוקול',q:'Matsusakagyu Yakiniku M Hozenji Osaka'}
+ ],
+ 'kyoto-short':[
+   {nm:'UNO Ramen — Sanjo',jp:'宇乃 三条 · ראמן',lvl:'ded',type:'🍜 ראמן',dist:'~1.3 ק״מ מזרחה (2 דק׳ מ‑Keihan Sanjo)',how:'מטבח 100% ללא גלוטן — מרק חלב סויה, אטריות אורז, וגם סושי טבעוני ללא גלוטן. סניף 2025. מומלץ להזמין.',price:'₪₪ (מנות סט ₪₪₪)',ver:'פתוח ~11:00–22:30 · אומת 8/2026',q:'UNO Ramen Sanjo Kyoto soymilk'},
+   {nm:'UNO Yukiko — Gion',jp:'祇園 豆乳らーめん',lvl:'ded',type:'🍜 ראמן',dist:'~2 ק״מ דרומ‑מז (גיון)',how:'&quot;חנות הראמן היחידה ביפן שכולה ללא גלוטן&quot;. כל התפריט בטוח. אין הזמנת שולחן — להגיע מוקדם. ~11–15, 17–20.',price:'₪₪',ver:'&quot;Dedicated Facility&quot; · GF Japan',q:'Gion soymilk ramen Uno Yukiko Kyoto'},
+   {nm:'Toshoan',jp:'都松庵 · מאפייה',lvl:'ded',type:'🍮 קינוח/מאפייה',dist:'~1.8 ק״מ מערבה (רחוב סאנג׳ו)',how:'פנקייק סופלה ללא גלוטן (מוכן במקום ~30 דק׳), צ׳יזקייק, מתיקה יפנית. הכתובת הרגועה לקינוח בטוח.',price:'₪₪ · 10:00–18:30, סגור ד׳',ver:'ביקורות עד 7/2026',q:'Toshoan Kyoto gluten free'},
+   {nm:'Café &amp; Bar Maru',jp:'שף ללא גלוטן',lvl:'ded',type:'🍱 מסעדה (יוקרתי)',dist:'~2 ק״מ דרומה (קיאמאצ׳י)',how:'תפריט מלא ללא גלוטן — כולל <b>טונקאטסו (שניצל חזיר) ללא גלוטן</b>, כמעט בלתי אפשרי לצליאק. מטבח ייעודי. לאמת שעות/הזמנה.',price:'₪₪₪',ver:'רשום 2024–2025 · לאמת',q:'Cafe and Bar Maru gluten free Kyoto Kiyamachi'},
+   {nm:'Kikyo Sushi',jp:'桔梗寿司 · סושי',lvl:'aware',type:'🍣 סושי',dist:'~1.5 ק״מ צפ‑מע',how:'צוות מודע לצליאק (בקשו את Mitsuru, אנגלית שוטפת) — יכינו מגש סושי ללא גלוטן עם סויה נטולת חיטה. להזמין מראש ולציין צליאק.',price:'₪₪–₪₪₪',ver:'ביקורות 2024–2026 · לאמת בטלפון',q:'Kikyo Sushi Nakagyo Kyoto'},
+   {nm:'Waco Crepes',jp:'קרפים ייעודיים',lvl:'ded',type:'🍧 קינוח/רחוב',dist:'~2 ק״מ דרומ‑מז (מיאגאווה, גיון)',how:'כל הקרפים ללא גלוטן (מתוק ומלוח). מוכר גם סויה ללא גלוטן בבקבוק. מטבח ייעודי.',price:'₪',ver:'ביקורות 2024–2025 · לאמת שעות',q:'Waco Crepes Kyoto Miyagawasuji'},
+   {nm:'Teppan Tenamonya',jp:'鉄板酒場 てなもんや',lvl:'aware',type:'🍳 טפאן (ערב)',dist:'~2.2 ק״מ דרומ‑מז (גיון)',how:'טמפורה/גיוזה/אוקונומיאקי ללא גלוטן — אך צליאקים מושבים <b>רק בישיבת 17:00</b> וצריך להזמין ~14 יום מראש. חוויה נדירה.',price:'₪₪',ver:'הזמנה חיונית',q:'Teppan Tenamonya Gion Kyoto'},
+   {nm:'Teuchi Toru Soba',jp:'סובה 100% כוסמת',lvl:'aware',type:'🥢 סובה (צהריים)',dist:'~1 ק״מ',how:'הבעלים טוחן קמח כוסמת 100% (juwari) ללא מגע חיטה, ומציע סויה ללא גלוטן. נדיר! לוודא שזה &quot;יום בלי חיטה&quot;. צהריים בלבד.',price:'₪₪ · לאמת יום‑יום',ver:'2024–2025 · לאמת במפה',q:'Teuchi Toru Soba Nakagyo Kyoto'},
+   {nm:'קומביני + דפאצ׳יקה',jp:'7-Eleven/Lawson · Daimaru/Takashimaya',lvl:'back',type:'🛒 גיבוי',dist:'סביב המלון + שיג׳ו (~1.5 ק״מ)',how:'קומביני: אוניגירי מלח/סלמון/אומבושי, ביצה 塩, SOYJOY, פרי. מרתפי Daimaru/Takashimaya: סושי טרי, ירקות, מוצ׳י — לאסוף ארוחה קרה בטוחה (לבדוק תוויות).',price:'₪',ver:'זמין תמיד',q:'Daimaru Kyoto Shijo depachika'}
+ ],
+ 'kyoto-med':[
+   {nm:'Sugarhill Kyoto',jp:'פיוז׳ן ללא גלוטן',lvl:'ded',type:'🍗 מסעדה',dist:'~2.7 ק״מ דרומה (לכיוון תחנת קיוטו)',how:'טריאקי עוף/דג ללא גלוטן (מנה שצליאק כמעט לא זוכה לה). השף מנקה את הגריל לפני הזמנה ללא גלוטן. מתאים לכל המשפחה.',price:'₪₪ · 17:00–22:00, סגור א׳',ver:'ביקורות עד 6/2026 · טל׳ 075-351-3913',q:'Sugarhill Kyoto gluten free restaurant'},
+   {nm:'Vermillion café',jp:'קפה ליד פושימי אינרי',lvl:'aware',type:'☕ קפה',dist:'~5–6 ק״מ דרומה (פושימי אינרי)',how:'תפריט עם סימון פריטים ללא גלוטן (חומוס עם ירקות, קינוחים). עצירת GF נוחה תוך כדי הביקור בפושימי אינרי. לאשר מול הצוות.',price:'₪–₪₪',ver:'ביקורות 2024–2026',q:'Vermillion cafe Fushimi Inari Kyoto'},
+   {nm:'Yosiya',jp:'良や · סט יפני',lvl:'aware',type:'🍱 מסעדה',dist:'~9 ק״מ מערבה (ארשיאמה)',how:'טמפורה/סוקיאקי וסט ללא גלוטן (~¥3,300). חובה הזמנה וציון צליאק. משתלב מצוין עם יער הבמבוק.',price:'₪₪ · בהזמנה',ver:'רשום 2024–2025 · לאמת',q:'Yosiya restaurant Arashiyama Kyoto'},
+   {nm:'Shigetsu (מקדש טנריו‑ג׳י)',jp:'篩月 · שוג׳ין',lvl:'aware',type:'🍵 מטבח מקדש',dist:'~9 ק״מ מערבה (ארשיאמה)',how:'ארוחת טופו (שוג׳ין) ללא גלוטן — בהזמנה טלפונית מראש בלבד (המטבח משתמש בסויה עם חיטה כברירת מחדל). נוף גן מרהיב.',price:'₪₪ · טלפון מראש',ver:'לאמת בהזמנה',q:'Shigetsu Tenryuji Arashiyama Kyoto'}
+ ]
+};
+
+var ATTR={
+ 'osaka-attr':{
+   short:[
+     {an:'פארק נאקאנושימה + גן ורדים',aw:'אי‑נהר ירוק 5 דק׳ צפונה — טיילת, גן ורדים, אולם ציבורי היסטורי. חינם. מושלם לאחה״צ ההגעה.',st:'תחנה: יודויאבאשי/קיטהאמה',gf:'GF: Comeconoco ו‑Seijo Ishii באותו כיוון (~1.5 ק״מ)'},
+     {an:'טירת אוסקה והפארק',aw:'טירה מפורסמת, פארק ענק, חפיר — נוף ותמונות. ~2.5 ק״מ מזרחה.',st:'תחנה: Osakajokoen / Tanimachi 4-chome',gf:'GF: לשלב עם Comeconoco+Seijo Ishii בטנמאבאשי בדרך'},
+     {an:'שינסאיבאשי · נמבה · דוֹטומבורי',aw:'לב השופינג והבידור — מעבר מקורה, נמבה, ונאון דוטומבורי. קו מידוסוג׳י ישיר, 2–3 תחנות.',st:'תחנה: שינסאיבאשי/נמבה',gf:'GF: OKO ו‑VIM כאן — לשלב קניות עם ארוחה בטוחה. דוכני דוטומבורי — לצפייה בלבד.'},
+     {an:'Den Den Town (ניפומבאשי)',aw:'ה&quot;אקיהברה&quot; של אוסקה — אנימה, משחקים, פיגרים, אלקטרוניקה. כיף לנוער.',st:'תחנה: Ebisucho/Nipponbashi',gf:'GF: OKO/VIM בנמבה הסמוכה'}
+   ],
+   med:[
+     {an:'אומדה / קיטה',aw:'מגדל התצפית Umeda Sky, גלגל ענק HEP Five, מרכז פוקימון, שופינג ענק — משיכה חזקה לנוער. קו מידוסוג׳י ישיר, 2 תחנות צפונה.',st:'תחנה: אומדה/אוסקה',gf:'GF: FOLK folksaka (פוקושימה, תחנה אחת מערבה)'},
+     {an:'אקווריום קאיוקאן + טמפוזאן',aw:'אחד האקווריומים הגדולים בעולם (כרישי לווייתן), נוף מפרץ וגלגל ענק. שילוב טבע/בידור לכל המשפחה. ~8–9 ק״מ מערבה.',st:'תחנה: Osakako (קו צ׳ואו, ישיר מהונמאצ׳י)',gf:'GF: מוגבל במקום — לשאת אוכל בטוח מ‑Comeconoco/קומביני'},
+     {an:'Universal Studios Japan',aw:'משיכת נוער גדולה (עולם נינטנדו/הארי פוטר) — אך דורש יום שלם. לא נכנס בחלון של 1.5 ימים אלא אם מוותרים על מרכז אוסקה. אופציונלי.',st:'תחנה: Universal City (JR)',gf:'GF: מוגבל — לשאת אוכל בטוח'}
+   ]
+ },
+ 'kyoto-attr':{
+   short:[
+     {an:'מוזיאון המנגה הבינלאומי',aw:'50,000+ מנגה לקריאה חופשית, תערוכות, שילוט באנגלית — עצירת פופ‑קלצ׳ר לנוער ממש ליד המלון.',st:'תחנה: קאראסומה‑אוֹיקֶה (~400 מ׳)',gf:'GF: קומביני + הליכה ל‑Toshoan/UNO'},
+     {an:'שוק נישיקי',aw:'&quot;המטבח של קיוטו&quot; — רחוב אוכל אייקוני, מצוין לצפייה ולשאר המשפחה.',st:'תחנה: שיג׳ו/קאראסומה',gf:'GF לבת: לצפייה בלבד (רוב הדוכנים סויה/מטוגן). ארוחה ב‑Toshoan/UNO.'},
+     {an:'מעברי Teramachi ו‑Shinkyogoku',aw:'גן עדן שופינג לנוער — אופנה, אנימה/מנגה, ארקייד, פורי‑קורה. מקורה (טוב בגשם).',st:'צמוד לנישיקי',gf:'GF: Natural House (טמארי) ו‑Toshoan בהליכה'},
+     {an:'סמטת פונטוצ׳ו + נהר קאמו',aw:'סמטה עם פנסים וטיילת נהר — נוף ואווירת ערב.',st:'~1.5 ק״מ דרומ‑מזרחה',gf:'GF: Café &amp; Bar Maru / Waco Crepes'},
+     {an:'גיון, שירקאווה, מקדש יאסאקה',aw:'רחובות הגיישות הקלאסיים, מקדש, נוף מסורתי.',st:'~2 ק״מ דרומ‑מזרחה',gf:'GF: UNO Gion, Waco Crepes, Teppan Tenamonya כאן'},
+     {an:'קיומיזו‑דרה + סאנן/נינֶן‑זאקה',aw:'המקדש המפורסם של קיוטו + נוף מהמדרון + רחובות עתיקים.',st:'~3 ק״מ מזרחה (אוטובוס/הליכה מגיון)',gf:'GF: קפה עם מאפי GF ליד הפגודה (לאמת זיהום צולב)'},
+     {an:'טירת ניג׳ו',aw:'טירת השוגון, &quot;רצפות הזמיר&quot;, גנים — היסטוריה וטבע. תחנה אחת מהמלון.',st:'תחנה: Nijojo-mae (קו טוזאי)',gf:'GF: Kushikura (שיפודים במלח) בקרבת מקום'}
+   ],
+   med:[
+     {an:'פושימי אינרי טאישה',aw:'אלפי שערי טורי אדומים וטיפוס הר נופי — הבחירה מס׳ 1 לטבע, וחינם.',st:'JR Nara ל‑Inari / Keihan ל‑Fushimi-Inari',gf:'GF: קפה Vermillion בבסיס (סימון פריטים ללא גלוטן)'},
+     {an:'ארשיאמה',aw:'יער הבמבוק, גן טנריו‑ג׳י, גשר טוגטסוקיו, פארק הקופים — יום טבע מלא.',st:'JR Sagano ל‑Saga-Arashiyama / Randen',gf:'GF: Yosiya (סט ללא גלוטן) ו‑Shigetsu (בהזמנה) כאן'},
+     {an:'Toei Kyoto Studio Park',aw:'פארק שעשועים בסגנון עידן אדו — מופעי נינג׳ה, תחפושות. יום פופ‑קלצ׳ר לנוער, לשלב עם כיוון ארשיאמה.',st:'~9 ק״מ מערבה (Uzumasa)',gf:'GF: מוגבל — לתכנן ארוחה ב‑Yosiya הסמוכה'},
+     {an:'קינקאקו‑ג׳י (הפביליון הזהוב)',aw:'מקדש עלי‑זהב מעל בריכת השתקפות — נוף גלויה.',st:'~7 ק״מ צפ‑מע (אוטובוס)',gf:'GF: מוגבל — לשאת חטיפים בטוחים'},
+     {an:'מוזיאון הרכבות של קיוטו',aw:'מוזיאון תחבורה ענק והתנסותי — משיכה רחבה, חצי יום קל.',st:'~3 ק״מ דרומ‑מע (אומקוג׳י)',gf:'GF: Sugarhill בערך בדרך חזרה'}
+   ]
+ }
+};
+
+// ---- render ----
+function card(p){
+  var b=BADGE[p.lvl];
+  var d=document.createElement('div'); d.className='card';
+  d.innerHTML=
+    '<div class=&quot;top&quot;><div><p class=&quot;nm&quot;>'+p.nm+'</p><div class=&quot;jp&quot;>'+p.jp+' · '+p.type+'</div></div>'+
+    '<span class=&quot;badge '+b[0]+'&quot;>'+b[1]+'</span></div>'+
+    '<div class=&quot;meta&quot;><b>מרחק:</b> '+p.dist+' &amp;nbsp;|&amp;nbsp; <b>מחיר:</b> '+p.price+'</div>'+
+    '<div class=&quot;how&quot;>'+p.how+'</div>'+
+    '<div class=&quot;foot&quot;><span class=&quot;verify&quot;>✓ '+p.ver+'</span>'+
+    '<a class=&quot;maplink&quot; target=&quot;_blank&quot; href=&quot;'+gmap(p.q)+'&quot;>🗺️ מפה</a></div>';
+  return d;
+}
+Object.keys(DATA).forEach(function(id){
+  var box=document.getElementById(id);
+  DATA[id].forEach(function(p){box.appendChild(card(p));});
+});
+function attrBlock(list){
+  var h='';
+  list.forEach(function(a){
+    h+='<div class=&quot;attr&quot;><div class=&quot;an&quot;>'+a.an+'</div><div class=&quot;aw&quot;>'+a.aw+'</div>'+
+       '<div class=&quot;st&quot;>🚉 '+a.st+'</div><div class=&quot;gf&quot;>'+a.gf+'</div></div>';
+  });
+  return h;
+}
+Object.keys(ATTR).forEach(function(id){
+  var box=document.getElementById(id);
+  box.innerHTML='<div class=&quot;rangehdr&quot; style=&quot;font-size:15px;&quot;>טווח קצר (עד 3 ק״מ)</div>'+attrBlock(ATTR[id].short)+
+                '<div class=&quot;rangehdr&quot; style=&quot;font-size:15px;&quot;>טווח בינוני (עד 10 ק״מ)</div>'+attrBlock(ATTR[id].med);
+});
+</script>
+</body>
+</html>
+" title="🍜 אוסקה + קיוטו"></iframe>
+<iframe class="pane " id="pane-si" srcdoc="<!DOCTYPE html>
+<html lang=&quot;he&quot; dir=&quot;rtl&quot;>
+<head>
+<meta charset=&quot;UTF-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+<title>מדריך יפן ללא גלוטן — קטע 2: שיזואוקה + איזו (שבוע הרכב)</title>
+<style>
+  :root{
+    --navy:#1b3a6b; --navy2:#264d86; --sky:#e8f0fb; --ink:#1f2937; --muted:#5b6675;
+    --line:#e2e8f0; --bg:#f5f7fa; --card:#ffffff;
+    --green:#137a4b; --greenbg:#e4f5ec;
+    --teal:#0d6d78; --tealbg:#e2f4f6;
+    --amber:#9a6a00; --amberbg:#fdf3dd;
+    --red:#b23b3b; --redbg:#fbe8e8;
+    --shadow:0 2px 10px rgba(20,40,80,.07);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--ink);
+    font-family:&quot;Segoe UI&quot;,&quot;Assistant&quot;,&quot;Heebo&quot;,Arial,&quot;Noto Sans Hebrew&quot;,sans-serif;
+    line-height:1.7; font-size:16px; direction:rtl; text-align:right;}
+  a{color:var(--navy2);}
+  .wrap{max-width:1020px; margin:0 auto; padding:0 16px 60px;}
+  header.hero{background:linear-gradient(135deg,#155e4b,#1b7a5e); color:#fff; padding:30px 16px 26px;}
+  header.hero .inner{max-width:1020px; margin:0 auto;}
+  header.hero h1{margin:0 0 6px; font-size:26px; font-weight:800;}
+  header.hero p{margin:2px 0; color:#d3ecdf; font-size:15px;}
+  .hero-stats{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;}
+  .hero-stats .stat{background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.2);
+    border-radius:12px; padding:8px 14px; font-size:14px;}
+  .hero-stats .stat b{display:block; font-size:18px;}
+  nav.tabs{position:sticky; top:0; z-index:20; background:#fff; border-bottom:1px solid var(--line);
+    box-shadow:var(--shadow); display:flex; gap:6px; padding:8px 16px; overflow-x:auto;}
+  nav.tabs button{border:none; background:var(--sky); color:var(--navy); font-weight:700; font-size:15px;
+    padding:9px 16px; border-radius:10px; cursor:pointer; white-space:nowrap; font-family:inherit;}
+  nav.tabs button.active{background:#1b7a5e; color:#fff;}
+  section.pg{display:none; padding-top:22px;} section.pg.active{display:block;}
+  h2.pt{font-size:22px; margin:6px 0 2px; color:#155e4b;}
+  .sub{color:var(--muted); margin:0 0 16px; font-size:14px;}
+  .panel{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px;
+    margin:14px 0; box-shadow:var(--shadow);}
+  .panel h3{margin:0 0 10px; font-size:18px; color:#155e4b; display:flex; align-items:center; gap:8px;}
+  .panel h4{margin:14px 0 6px; font-size:15px; color:var(--navy2);}
+  .warn{background:var(--amberbg); border:1px solid #f0d999;}
+  .crit{background:var(--redbg); border:1px solid #eab3b3;}
+  .panel ul{margin:6px 0 0; padding-inline-start:20px;} .panel li{margin:5px 0;}
+  .day{border-inline-start:4px solid #1b7a5e; background:#fff; border:1px solid var(--line);
+    border-radius:12px; padding:12px 14px; margin:10px 0;}
+  .day .dhead{font-weight:800; color:#155e4b; font-size:15px;}
+  .day .dtag{font-size:12px; background:#e4f5ec; color:#155e4b; border-radius:20px; padding:2px 10px;
+    margin-inline-start:8px; font-weight:700;}
+  .day ol{margin:8px 0 0; padding-inline-start:20px;} .day ol li{margin:5px 0;}
+  .rangehdr{font-size:16px; font-weight:800; color:#155e4b; margin:18px 0 4px; padding-bottom:4px;
+    border-bottom:2px solid #e4f5ec;}
+  .rangehdr small{font-weight:600; color:var(--muted); font-size:12.5px;}
+  .attr{background:#fff; border:1px solid var(--line); border-radius:12px; padding:11px 13px; margin:9px 0;}
+  .attr .an{font-weight:800; color:var(--ink);}
+  .attr .aw{font-size:13.5px; color:var(--muted); margin-top:3px;}
+  .attr .pk{font-size:12.5px; color:#155e4b; font-weight:700; margin-top:4px;}
+  .attr .gf{font-size:12.5px; color:var(--green); margin-top:3px;}
+  .attr .mp{margin-top:6px;}
+  .maplink{background:#1b7a5e; color:#fff; text-decoration:none; font-weight:700; font-size:13px;
+    padding:6px 11px; border-radius:9px; display:inline-flex; gap:6px; align-items:center;}
+  .note{font-size:13px; color:var(--muted); background:#fbfcfe; border:1px dashed var(--line);
+    border-radius:10px; padding:10px 12px; margin-top:10px;}
+  .lodge{border:1px solid var(--line); border-radius:13px; padding:14px 16px; margin:12px 0; background:#fff; box-shadow:var(--shadow);}
+  .lodge .lh{display:flex; justify-content:space-between; align-items:flex-start; gap:8px; flex-wrap:wrap;}
+  .lodge .ln{font-weight:800; font-size:17px; color:#155e4b;}
+  .badge{font-size:11.5px; font-weight:800; padding:3px 9px; border-radius:20px; white-space:nowrap;}
+  .b-meal{background:var(--tealbg); color:var(--teal);}
+  .b-city{background:var(--sky); color:var(--navy);}
+  .lodge .row{font-size:13.5px; margin-top:6px;} .lodge .row b{color:var(--ink);}
+  .feas{font-size:13px; border-radius:9px; padding:8px 10px; margin-top:8px;}
+  .feas.good{background:var(--greenbg); color:#0e5c39;}
+  .feas.mid{background:var(--amberbg); color:#7a5400;}
+  .tmpl{background:#0f2038; color:#e8eefc; border-radius:12px; padding:14px 16px; margin:12px 0;
+    font-size:14px; line-height:1.8; direction:ltr; text-align:left; white-space:pre-wrap; position:relative;}
+  .tmpl.jp{direction:ltr; text-align:left; font-family:&quot;Yu Gothic&quot;,&quot;Hiragino Kaku Gothic Pro&quot;,sans-serif;}
+  .copybtn{position:absolute; top:10px; left:10px; background:#1b7a5e; color:#fff; border:none;
+    border-radius:8px; padding:6px 12px; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit;}
+  .foot-disc{font-size:12.5px; color:var(--muted); margin-top:26px; text-align:center;}
+  details.src{margin-top:10px;} details.src summary{cursor:pointer; font-weight:700; color:var(--navy2); font-size:13px;}
+  details.src a{display:block; font-size:12px; margin:3px 0; word-break:break-all;}
+  .pill{display:inline-block; background:var(--sky); color:var(--navy); border-radius:20px; padding:2px 10px;
+    font-size:12.5px; font-weight:700; margin:2px 3px;}
+</style>
+</head>
+<body>
+
+<header class=&quot;hero&quot;>
+  <div class=&quot;inner&quot;>
+    <h1>מדריך יפן ללא גלוטן — קטע 2</h1>
+    <p>שבוע הרכב: שיזואוקה · יאיזו · חצי‑האי איזו &amp;nbsp;|&amp;nbsp; 23–29 בספטמבר 2026</p>
+    <p>דגש על טבע וחוף · חניות והוראות נהיגה · ואסטרטגיית אוכל ללא גלוטן לאזור כפרי</p>
+    <div class=&quot;hero-stats&quot;>
+      <div class=&quot;stat&quot;><b>1</b> לילה שיזואוקה</div>
+      <div class=&quot;stat&quot;><b>2</b> לילות יאיזו</div>
+      <div class=&quot;stat&quot;><b>1</b> לילה טוֹאי (איזו מערב)</div>
+      <div class=&quot;stat&quot;><b>2</b> לילות אטגאווה (איזו מזרח)</div>
+      <div class=&quot;stat&quot;><b>תחבורה</b> רכב שכור</div>
+    </div>
+  </div>
+</header>
+
+<nav class=&quot;tabs&quot;>
+  <button class=&quot;active&quot; data-t=&quot;drive&quot;>🚗 נהיגה ולוגיסטיקה</button>
+  <button data-t=&quot;lodge&quot;>🏯 GF בלינות שהזמנת</button>
+  <button data-t=&quot;shiz&quot;>שיזואוקה + יאיזו</button>
+  <button data-t=&quot;izu&quot;>חצי‑האי איזו</button>
+</nav>
+
+<div class=&quot;wrap&quot;>
+
+<!-- ============ DRIVE ============ -->
+<section class=&quot;pg active&quot; id=&quot;drive&quot;>
+  <h2 class=&quot;pt&quot;>נהיגה ולוגיסטיקה — שבוע הרכב</h2>
+  <p class=&quot;sub&quot;>איסוף הרכב בשיזואוקה, מעבר יבשתי לאיזו, ומסלול חזרה חכם לטוקיו.</p>
+
+  <div class=&quot;panel crit&quot;>
+    <h3>⚠️ לפני הטיסה — רישיון נהיגה</h3>
+    <p>ישראל חתומה על <b>אמנת ז׳נבה 1949</b> שיפן מכירה בה. צריך:</p>
+    <ul>
+      <li><b>רישיון בין‑לאומי (IDP) בפורמט 1949</b> — מוציאים בישראל (ממס&quot;י) לפני הנסיעה. <b>לא</b> פורמט וינה 1968 (פסול ביפן).</li>
+      <li>הרישיון הישראלי המקורי + הדרכון — לשאת את שלושתם יחד ברכב.</li>
+      <li>אין צורך בתרגום JAF עבור ישראלים.</li>
+    </ul>
+  </div>
+
+  <div class=&quot;panel&quot;>
+    <h3>🔑 איסוף והחזרת הרכב (לפי ההזמנה שלך)</h3>
+    <p><b>איסוף:</b> תחנת שיזואוקה, ד׳ 23.9 בשעה <b>15:00</b>. <b>החזרה:</b> תחנת <b>אודוארה</b>, ג׳ 29.9 בשעה <b>15:00</b>. הרכב זמין כבר מהערב הראשון — שימו לב לחניית לילה במלון Associa בשיזואוקה.</p>
+    <ul>
+      <li><b>Toyota Rent a Car</b> — 3 דק׳ הליכה מהיציאה הדרומית, 08:00–20:00 כל יום. הזמנה באנגלית.</li>
+      <li><b>להזמין רכב גדול</b> (מיניוואן טיפוס Noah/Voxy, 7 מקומות) — 5 נוסעים + מזוודות לא נכנסים בסדאן.</li>
+      <li><b>לבקש כרטיס ETC</b> לתשלום אגרות אוטומטי בכבישים המהירים.</li>
+      <li>שימו לב: המלון ביציאה הצפונית, ההשכרות בדרומית — ~5 דק׳ הליכה מתחת/מעל התחנה.</li>
+    </ul>
+  </div>
+
+  <div class=&quot;panel&quot;>
+    <h3>🚗 נסיעה לאיזו — יאיזו → טוֹאי (יבשתי)</h3>
+    <p>נוסעים כל הדרך ברכב (בלי מעבורת). מיאיזו לטוֹאי (חוף מערב איזו): ~100–110 ק״מ, <b>~2–2.5 שעות</b>.</p>
+    <ul>
+      <li>מסלול: יאיזו ← כביש מהיר Tomei מזרחה עד נומאזו ← כביש 414 / Izu‑Jukan לשוזנג׳י ← כביש 136 מערבה לטוֹאי.</li>
+      <li>ניווט: להזין &quot;Musouan Biwa, טוֹאי&quot; ב‑Google Maps או לפי מספר טלפון של המלון.</li>
+      <li>לצאת אחרי בוקר קצר ביאיזו (שוק הדגים) כדי להגיע לטוֹאי לפני השקיעה.</li>
+    </ul>
+  </div>
+
+  <div class=&quot;panel&quot;>
+    <h3>🗺️ מקטעי נהיגה</h3>
+    <p><b>שיזואוקה → יאיזו:</b> ~15 ק״מ, ~25–30 דק׳ (חוף כביש 150 או כביש מהיר Tomei). מקטע קצר וקל להתחלה.</p>
+    <p><b>טוֹאי → אטגאווה (חציית חצי‑האי, א׳ 27.9):</b> ~60–70 ק״מ, ~שעתיים נטו / חצי יום עם עצירות. מסלול נופי: טוֹאי ← כביש 136 לשוזנג׳י ← כביש 414 דרומה מעל רכס אמאגי ← קוואזו ← כביש 135 צפונה לאטגאווה. עצירות בדרך: מפלי Joren + חוות ווסאבי, וגשר הלולאה הכפול של Kawazu-Nanadaru.</p>
+  </div>
+
+  <div class=&quot;panel warn&quot;>
+    <h3>🚉 חזרה לטוקיו (ג׳ 29.9) — החזרת רכב באודוארה 15:00</h3>
+    <p>לפי ההזמנה מחזירים את הרכב בתחנת <b>אודוארה בשעה 15:00</b>. תכנון היום:</p>
+    <ul>
+      <li>בוקר אחרון באיזו, ואז נסיעה מאטגאווה לאודוארה (~שעה וחצי צפונה בכביש 135 דרך אטאמי) — להגיע עם מרווח לפני 15:00.</li>
+      <li>החזרת הרכב באודוארה, ומשם רכבת לטוקיו: <b>שינקנסן Kodama אודוארה→טוקיו ~35 דק׳</b> (או Odoriko ישיר).</li>
+      <li>אל תיכנסו עם הרכב לטוקיו — חניה יקרה ונהיגה במרכז מלחיצה; אודוארה מושלמת כצומת רכב←רכבת.</li>
+    </ul>
+  </div>
+
+  <div class=&quot;panel&quot;>
+    <h3>🧭 יסודות נהיגה ביפן</h3>
+    <p>נוסעים ב<b>צד שמאל</b>, הגה מימין. ניווט: ה‑GPS היפני עובד הכי טוב לפי <b>מספר טלפון</b> של היעד או MapCode; פשוט יותר להשתמש ב‑Google Maps בנייד עם eSIM. מהירויות נמוכות (40–60 עירוני, ~80–100 מהיר). אגרות דרך — עם ה‑ETC. תחנות דלק — לבחור &quot;full service&quot; ולומר &quot;regular&quot;.</p>
+  </div>
+</section>
+
+<!-- ============ LODGE GF ============ -->
+<section class=&quot;pg&quot; id=&quot;lodge&quot;>
+  <h2 class=&quot;pt&quot;>אכילה ללא גלוטן בבתי הלינה שהזמנת</h2>
+  <p class=&quot;sub&quot;>בדקתי כל בית לינה. הלינות סגורות — כאן רק בדיקת מודעות/פתרון והכנה מעשית. <b>שורה תחתונה:</b> אף ריוקאן ביפן אינו &quot;מוסמך&quot; ללא גלוטן, אבל קאיסקי ללא גלוטן <b>אפשרי</b> אם מתאמים בכתב ומראש. הכנתי לך נוסח פנייה מוכן — למטה.</p>
+
+  <div class=&quot;panel crit&quot;>
+    <h3>❗ הנקודה הקריטית של השבוע</h3>
+    <p>בשלושה מבתי הלינה (Migiwaya, Musouan Biwa, IZU RETREAT SUIKO) <b>ארוחות הערב והבוקר כלולות במחיר</b> והן ארוחות קאיסקי עתירות דגים, סויה, מיסו ודאשי — כל מלכודות הגלוטן הנסתר. לכן חובה לפנות אליהם <b>מראש ובכתב</b> ולקבל אישור. הביאו בכל מקרה <b>טמארי ללא גלוטן</b> ומזון גיבוי לחדר.</p>
+  </div>
+
+  <div class=&quot;panel warn&quot;>
+    <h3>🔑 הצינור האפקטיבי: &quot;אלרגיה לחיטה&quot;, לא &quot;גלוטן פרי&quot;</h3>
+    <p>ביפן &quot;גלוטן‑פרי&quot; (グルテンフリー) כמעט לא מוכר במטבחים מסורתיים — אבל <b>חיטה (小麦) היא אחד מ‑8 האלרגנים שחובה לסמן בחוק</b>. לכן הציגו את הבת כ<b>&quot;אלרגיה חמורה לחיטה&quot; (小麦アレルギー・重度 / 小麦完全除去)</b>, וחזקו עם ההסבר על צליאק וזיהום צולב. זה המנוף שמפעיל את מערכת הטיפול באלרגנים של המקום.</p>
+  </div>
+
+  <div class=&quot;panel&quot;>
+    <h3>📊 סיכום הבדיקה — דירוג מוכנות ל‑GF</h3>
+    <p><b>ריוקאנים (ארוחות כלולות):</b> <span class=&quot;pill&quot;>1. SUIKO — מדיניות מפורסמת ✅</span> <span class=&quot;pill&quot;>2. Musouan Biwa — לא ודאי</span> <span class=&quot;pill&quot;>3. Migiwaya — לא ודאי</span></p>
+    <p><b>מלונות עיר (בוקר):</b> <span class=&quot;pill&quot;>1. Kyoto Sanjo — לחם GF + סימון ✅</span> <span class=&quot;pill&quot;>2. Associa — מדיניות רשת ✅</span> <span class=&quot;pill&quot;>3. Royal Park Osaka</span> <span class=&quot;pill&quot;>4. Nihonbashi טוקיו</span></p>
+    <p class=&quot;note&quot;>נבדק 8/2026 מול אתרים רשמיים, פלטפורמות הזמנה וביקורות 2023–2026. &quot;לא ודאי&quot; = אין מדיניות מפורסמת ואין עדות בביקורות — לא סירוב, אלא חובה לאשר ישירות.</p>
+  </div>
+
+  <div class=&quot;lodge&quot;>
+    <div class=&quot;lh&quot;><span class=&quot;ln&quot;>Migiwaya · יאיזו</span><span class=&quot;badge b-meal&quot;>קאיסקי כלול · דגש דגים</span></div>
+    <div class=&quot;row&quot;><b>מה זה:</b> ריוקאן אונסן קטן עם וילות‑גן, ליד נמל יאיזו. חניה חופשית באתר.</div>
+    <div class=&quot;row&quot;><b>ארוחות:</b> ערב קאיסקי עונתי + ארוחת בוקר יפנית, עתירות פירות ים מקומיים (טונה, בוניטו, שרימפ).</div>
+    <div class=&quot;feas mid&quot;>⚠️ <b>לא ודאי:</b> אין מדיניות אלרגנים מפורסמת ואין עדות בביקורות (2023–2026) — חובה לאשר מראש. נקודת אור: אזור פירות ים → <b>סשימי + דג צלוי + אורז לבן + ווסאבי טרי</b> עם הטמארי של נועה = בסיס בטוח טבעי.</div>
+    <div class=&quot;row&quot;><b>📞 קשר:</b> טלפון 054-628-3155 · טופס באתר migiwaya.jp/contact · לנסח כ&quot;אלרגיה חמורה לחיטה&quot; ולציין שמביאים טמארי.</div>
+  </div>
+
+  <div class=&quot;lodge&quot;>
+    <div class=&quot;lh&quot;><span class=&quot;ln&quot;>Musouan Biwa (無雙庵枇杷) · טוֹאי</span><span class=&quot;badge b-meal&quot;>קאיסקי כלול · יוקרתי</span></div>
+    <div class=&quot;row&quot;><b>מה זה:</b> 8 וילות מפוארות עם אונסן פרטי מעל מפרץ סורוגה. חניה באתר.</div>
+    <div class=&quot;row&quot;><b>ארוחות:</b> קאיסקי יצירתי מתחלף חודשי, מבוסס פירות ים של מפרץ סורוגה + ירקות עונה.</div>
+    <div class=&quot;feas mid&quot;>⚠️ <b>לא ודאי</b> — אין מדיניות מפורסמת ואין עדות בביקורות. אך מקום קטן ויוקרתי עם קאיסקי מותאם‑חודשי מגדיל סיכוי להיענות בתיאום מראש. חובה אישור בכתב.</div>
+    <div class=&quot;row&quot;><b>📞 קשר:</b> מוקד הזמנות 050-5805-9386 (9:00–20:00) · izu-biwa.jp · לבקש הסרת חיטה מלאה (小麦完全除去) כולל סויה/מיסו/דאשי.</div>
+  </div>
+
+  <div class=&quot;lodge&quot;>
+    <div class=&quot;lh&quot;><span class=&quot;ln&quot;>IZU RETREAT ATAGAWA SUIKO · אטגאווה</span><span class=&quot;badge b-meal&quot;>קאיסקי כלול · יפני‑צרפתי</span></div>
+    <div class=&quot;row&quot;><b>מה זה:</b> ריטריט אונסן מודרני, 16 חדרים עם אמבט פרטי לנוף ים. טל׳ 0557-23-2345. חניה באתר.</div>
+    <div class=&quot;row&quot;><b>ארוחות:</b> ברוב התוכניות &quot;לילה + 2 ארוחות&quot; (ארוחת בוקר = תוספת שיש לבקש עד הצ׳ק‑אין). המטבח משלב טכניקה יפנית‑צרפתית — <b>יותר רטבים ורדוקציות</b> = יותר סיכון גלוטן נסתר.</div>
+    <div class=&quot;feas good&quot;>✅ <b>הטוב מהשלושה:</b> ב‑FAQ הרשמי כתוב מפורשות &quot;אם תודיעו מראש — נתאים לאלרגיות ככל הניתן&quot;. יש מודעות ומדיניות אמיתית. הסתייגות: לא מזכירים &quot;גלוטן&quot; ספציפית → לאשר מסגור &quot;חיטה חמורה&quot; + זיהום צולב בכתב.</div>
+    <div class=&quot;row&quot;><b>📧 קשר:</b> אימייל suiko@okcs.co.jp (מומלץ — יוצר תיעוד) · טלפון 0557-23-2345. 2 לילות = 2 ערב + 2 בוקר לתאם.</div>
+  </div>
+
+  <h3 class=&quot;rangehdr&quot; style=&quot;font-size:16px;&quot;>🏨 מלונות העיר (כל הטיול) — ארוחת בוקר ומודעות</h3>
+  <p class=&quot;sub&quot; style=&quot;margin-top:2px;&quot;>פחות קריטי — הבת אוכלת בחוץ. הבדיקה מתמקדת בבופה הבוקר ובמודעות לאלרגנים.</p>
+
+  <div class=&quot;lodge&quot;>
+    <div class=&quot;lh&quot;><span class=&quot;ln&quot;>Mitsui Garden Kyoto Sanjo</span><span class=&quot;badge b-city&quot;>קיוטו · הכי טוב</span></div>
+    <div class=&quot;feas good&quot;>✅ באתר הרשמי יש <b>סימון אלרגנים לכל מנה</b> ואף <b>לחם ללא גלוטן</b>. בוקר &quot;מנה עיקרית + חצי‑בופה&quot; (~¥3,850). המנה על בסיס ביצה מסומנת ללא חיטה. הכי בטוח מהארבעה.</div>
+    <div class=&quot;row&quot;><b>📞 קשר:</b> טופס/טלפון של המלון (לרשת Mitsui Garden אין מדיניות מרכזית — לכל מלון בנפרד).</div>
+  </div>
+  <div class=&quot;lodge&quot;>
+    <div class=&quot;lh&quot;><span class=&quot;ln&quot;>Hotel Associa Shizuoka</span><span class=&quot;badge b-city&quot;>שיזואוקה · מדיניות רשת</span></div>
+    <div class=&quot;feas good&quot;>✅ לרשת JR Central יש <b>מדיניות אלרגנים כתובה</b> (כולל חיטה) ו&quot;תפריט ידידותי לאלרגיה&quot; לפי בקשה, כולל הנחיות לבופה. בוקר בופה ~¥2,900. גם נקודת קניית ה‑GF הגדולה לפני האזור הכפרי.</div>
+    <div class=&quot;row&quot;><b>📞 קשר:</b> טלפון +81-54-254-4141 · להזכיר את מדיניות האלרגנים של JR Central.</div>
+  </div>
+  <div class=&quot;lodge&quot;>
+    <div class=&quot;lh&quot;><span class=&quot;ln&quot;>Royal Park Iconic Osaka</span><span class=&quot;badge b-city&quot;>אוסקה · חלקי</span></div>
+    <div class=&quot;feas mid&quot;>⚠️ אין עדות במלון עצמו (למלון האח בטוקיו יש מדיניות אלרגנים). בופה ~¥3,800 עתיר מאכלי רחוב אוסקאיים (חיטה). ניתן להרכיב מ<b>תחנת ביצים + סלט + פירות</b> — לבקש ללא רוטב סויה.</div>
+    <div class=&quot;row&quot;><b>📞 קשר:</b> לפנות למלון ישירות ולשאול אם המסעדה יכולה להכין צלחת נטולת חיטה.</div>
+  </div>
+  <div class=&quot;lodge&quot;>
+    <div class=&quot;lh&quot;><span class=&quot;ln&quot;>Mitsui Garden Nihonbashi</span><span class=&quot;badge b-city&quot;>טוקיו · עדות חלשה</span></div>
+    <div class=&quot;feas mid&quot;>⚠️ <b>אין עדות בכלל.</b> בופה ~¥3,850, מטבח קאגה עתיר סויה (אורז מתובל, דאשי‑מאקי) — הרכבה עצמית קשה. לוודא זמינות אורז לבן פשוט/דג צלוי/ביצה/פרי. עדיף להסתמך על אוכל בחוץ (ראו קטע 3 — טוקיו).</div>
+    <div class=&quot;row&quot;><b>📞 קשר:</b> טופס/טלפון של המלון ישירות.</div>
+  </div>
+
+  <div class=&quot;panel&quot;>
+    <h3>📧 נוסח פנייה מוכן לריוקאן (יפנית) — להעתקה</h3>
+    <p>שלחו ~2–3 שבועות מראש, ואשרו שוב 3–4 ימים לפני ההגעה. מלאו את הסוגריים.</p>
+    <div class=&quot;tmpl jp&quot; id=&quot;jp1&quot;><button class=&quot;copybtn&quot; data-c=&quot;jp1&quot;>העתק</button>件名：小麦アレルギー（セリアック病・重度）・グルテンフリーのお願い
+
+ご担当者様
+
+〇月〇日から〇泊で予約しております、〔氏名〕と申します（予約番号：〔番号〕）。
+同行する娘は医師の診断によるセリアック病で、小麦・大麦・ライ麦を含むグルテンを一切摂取できません。少量でも体調を崩します。
+
+夕食・朝食につきまして、以下のご対応をお願いできますでしょうか。
+・通常の醤油（小麦入り）と麦味噌は使わず、小麦不使用のたまり醤油、または塩・柑橘で味付けしてください。味噌汁は米味噌でもご確認をお願いします。
+・天ぷら・揚げ物（共用の油）、そば、うどん、麩、かに風味かまぼこ（すり身）、小麦を含むだし・調味料はお控えください。
+・焼き魚・お刺身・蒸し料理・ご飯・野菜など、自然にグルテンフリーの料理を中心にしていただけると助かります。
+・調理器具・まな板・鍋を分け、他の料理との接触（コンタミネーション）を避けてください。
+
+グルテンフリーのたまり醤油は持参いたします。上記のご対応が可能かどうか、事前にお知らせいただけますでしょうか。難しい場合は、焼き魚・お刺身・ご飯・野菜など安全なお料理だけでも構いません。
+
+お手数をおかけしますが、どうぞよろしくお願いいたします。
+〔氏名〕</div>
+
+    <h4>גרסה קצרה באנגלית (אם אין תמיכה ביפנית):</h4>
+    <div class=&quot;tmpl&quot; id=&quot;en1&quot;><button class=&quot;copybtn&quot; data-c=&quot;en1&quot;>Copy</button>Subject: Celiac / gluten-free meal request
+
+Dear Sir/Madam,
+We have a reservation for [dates], under [name] (booking no. [xxx]).
+Our daughter has medically-diagnosed CELIAC disease and cannot eat ANY gluten (wheat, barley, rye). Even a small amount makes her ill.
+
+For dinner and breakfast, could you please:
+- Use gluten-free TAMARI (wheat-free soy sauce) or salt/citrus instead of regular soy sauce; use rice miso, not barley miso (please confirm).
+- Avoid tempura/fried foods (shared oil), soba, udon, wheat-thickened dashi/sauces, and imitation crab (surimi).
+- Base her meals on naturally gluten-free dishes: grilled fish, sashimi, steamed dishes, rice, vegetables.
+- Keep separate utensils/cutting boards/pans to avoid cross-contamination.
+
+We will also bring our own gluten-free tamari. Could you kindly confirm in advance whether this is possible? If a full accommodation is difficult, plain grilled fish / sashimi / rice / vegetables would be perfectly fine.
+
+Thank you very much.
+[name]</div>
+    <p class=&quot;note&quot;>מונחי מפתח לזיהוי בתפריט/תווית: 小麦 = חיטה · 大麦 = שעורה · 醤油 = סויה · 味噌 = מיסו · たまり = טמארי · 塩 = מלח (בטוח).</p>
+  </div>
+</section>
+
+<!-- ============ SHIZUOKA + YAIZU ============ -->
+<section class=&quot;pg&quot; id=&quot;shiz&quot;>
+  <h2 class=&quot;pt&quot;>שיזואוקה + יאיזו · 23–26.9</h2>
+  <p class=&quot;sub&quot;>בסיס 3: Hotel Associa Shizuoka (על התחנה) · בסיס 4: Migiwaya (יאיזו). דגש: מישורי תה, יער אורנים ונוף מפרץ סורוגה.</p>
+
+  <div class=&quot;panel warn&quot;>
+    <h3>🗻 על פוג׳י — לצפות בכנות</h3>
+    <p>בסוף ספטמבר ההר לרוב מכוסה עננים (הנראות הטובה היא נוב׳–פבר׳). סכת ראייה ריאלית ~20–35% ובעיקר בבוקר מוקדם/שקיעה. תתייחסו לכל צפייה בפוג׳י כבונוס — החוף, האורנים והמפרץ שווים בכל מזג אוויר.</p>
+  </div>
+
+  <div class=&quot;panel&quot;>
+    <h3>🗓️ מסלול מוצע</h3>
+    <div class=&quot;day&quot;><span class=&quot;dhead&quot;>ד׳ 23.9 — הגעה לשיזואוקה + איסוף רכב 15:00</span><span class=&quot;dtag&quot;>ערב רגוע</span>
+      <ol><li>שינקנסן מקיוטו, צ׳ק‑אין במלון שעל התחנה. <b>קניית GF גדולה</b> (KALDI / Seijo Ishii / סופר) — טמארי, אורז, חטיפים — לקראת האזור הכפרי.</li>
+      <li>איסוף הרכב ב‑15:00. אופציה לאחה״צ/שקיעה: <b>מישור ניהונדאירה</b> לנוף מפרץ סורוגה. לינה בשיזואוקה (חניית לילה במלון).</li></ol></div>
+    <div class=&quot;day&quot;><span class=&quot;dhead&quot;>ה׳ 24.9 — יאיזו דרך מיהו נו מאטסובארה</span><span class=&quot;dtag&quot;>טבע · טווח בינוני</span>
+      <ol><li>בדרך ליאיזו: <b>רכבל ניהונדאירה לקונוזאן טושוגו</b> (אם לא נעשה אתמול) ו<b>יער האורנים מיהו נו מאטסובארה</b> (נוף פוג׳י מעבר למפרץ, אתר יוניסק&quot;ו).</li>
+      <li>צ׳ק‑אין ב‑Migiwaya, ארוחת ערב קאיסקי (מתואמת מראש עבור נועה).</li></ol></div>
+    <div class=&quot;day&quot;><span class=&quot;dhead&quot;>ו׳ 25.9 — יאיזו ומישורי התה</span><span class=&quot;dtag&quot;>טווח קצר‑בינוני</span>
+      <ol><li>בוקר: <b>Yaizu Sakana Center</b> (שוק דגים — סשימי טרי לבת עם הטמארי של נועה).</li>
+      <li>אחה״צ: מטעי התה של מאקינוהארה/פוג׳ידה — נוף ירוק ותצפיות.</li></ol></div>
+    <div class=&quot;day&quot;><span class=&quot;dhead&quot;>ש׳ 26.9 — נסיעה לטוֹאי (איזו מערב)</span><span class=&quot;dtag&quot;>מעבר לאיזו</span>
+      <ol><li>בוקר קצר ביאיזו, ואז נסיעה יבשתית לטוֹאי (~2–2.5 שעות דרך נומאזו/שוזנג׳י).</li>
+      <li>הגעה לטוֹאי, שקיעה מעל המפרץ, צ׳ק‑אין ב‑Musouan Biwa.</li></ol></div>
+  </div>
+
+  <h3 class=&quot;rangehdr&quot;>🎌 עצירות טבע וחניות</h3>
+  <div id=&quot;shiz-attr&quot;></div>
+
+  <div class=&quot;panel&quot;>
+    <h3>🥢 אסטרטגיית אוכל — שיזואוקה/יאיזו</h3>
+    <p><b>ביושר:</b> אין כאן מסעדת GF ייעודית מאומתת ברדיוס 10 ק״מ. האסטרטגיה: קאיסקי מתואם ב‑Migiwaya (ראו לשונית הלינות), <b>סשימי טרי + טמארי של נועה</b> (יאיזו = נמל טונה/בוניטו מפורסם), וקנייה עצמית. <b>עשו את קניית ה‑GF הגדולה בשיזואוקה העיר</b> (KALDI/Seijo Ishii/AEON) לפני יאיזו הכפרית. ווסאבי טרי בטוח — להיזהר מווסאבי בשפופרת ומרטבי פונזו מוכנים.</p>
+    <details class=&quot;src&quot;><summary>מקורות (שיזואוקה/יאיזו)</summary>
+      <a href=&quot;https://www.associa.com/sth/multi-lingual/locations/?wovn=en&quot; target=&quot;_blank&quot;>Hotel Associa (רשמי)</a>
+      <a href=&quot;https://www.com-shizuoka.com/en/property/migiwaya-hotel.html&quot; target=&quot;_blank&quot;>Migiwaya</a>
+      <a href=&quot;https://www.visit-shizuoka.com/en/spot/detail_21.html&quot; target=&quot;_blank&quot;>רכבל ניהונדאירה</a>
+      <a href=&quot;https://www.jeepe.jp/en/articles/miho-no-matsubara-shizuoka-1180&quot; target=&quot;_blank&quot;>מיהו נו מאטסובארה</a>
+      <a href=&quot;https://www.gltjp.com/en/directory/item/17739/&quot; target=&quot;_blank&quot;>Yaizu Sakana Center</a>
+    </details>
+  </div>
+</section>
+
+<!-- ============ IZU ============ -->
+<section class=&quot;pg&quot; id=&quot;izu&quot;>
+  <h2 class=&quot;pt&quot;>חצי‑האי איזו · 26–29.9</h2>
+  <p class=&quot;sub&quot;>בסיס 5: Musouan Biwa (טוֹאי, חוף מערב) · בסיס 6: IZU RETREAT SUIKO (אטגאווה, חוף מזרח). דגש: חוף דרמטי, מפלים ואונסן.</p>
+
+  <div class=&quot;panel&quot;>
+    <h3>🗓️ מסלול מוצע</h3>
+    <div class=&quot;day&quot;><span class=&quot;dhead&quot;>ש׳ 26.9 — טוֹאי (חוף מערב)</span><span class=&quot;dtag&quot;>שקיעה · טווח קצר</span>
+      <ol><li>הגעה בנהיגה מיאיזו, <b>שקיעה בכף Koibito (Lover's Cape)</b> — נוף פוג׳י מעל הים (להגיע לפני החשכה; חסום אחרי 17:00).</li>
+      <li>אופציה: <b>מכרה הזהב של טוֹאי</b> (כיף לנוער/גיבוי לגשם). קאיסקי ב‑Musouan Biwa.</li></ol></div>
+    <div class=&quot;day&quot;><span class=&quot;dhead&quot;>א׳ 27.9 — חציית חצי‑האי לאטגאווה</span><span class=&quot;dtag&quot;>מפלים · טווח בינוני</span>
+      <ol><li>נסיעה נופית מזרחה. עצירות: <b>מפלי Joren</b> (+ ווסאבי טרי) ו<b>גשר הלולאה + שבעת מפלי Kawazu</b>.</li>
+      <li>הגעה לאטגאווה, צ׳ק‑אין ב‑SUIKO (קאיסקי מתואם GF).</li></ol></div>
+    <div class=&quot;day&quot;><span class=&quot;dhead&quot;>ב׳ 28.9 — חוף מזרח קלאסי</span><span class=&quot;dtag&quot;>יום טבע מלא</span>
+      <ol><li><b>חוף Jogasaki + גשר תלוי Kadowaki</b> (מעל צוקי לבה) ו<b>הר Omuro</b> (רכבל + טבעת מכתש) — הצמד הקלאסי של מזרח איזו.</li>
+      <li>אופציה נוספת: חופי שימודה (Shirahama) / כף Irozaki בדרום.</li></ol></div>
+    <div class=&quot;day&quot;><span class=&quot;dhead&quot;>ג׳ 29.9 — בוקר, החזרת רכב באודוארה 15:00, ואז טוקיו</span><span class=&quot;dtag&quot;>מעבר</span>
+      <ol><li>בוקר חוף קצר. נסיעה מאטגאווה לאודוארה (~שעה וחצי) עם מרווח לפני 15:00.</li>
+      <li><b>החזרת הרכב באודוארה 15:00</b>, ואז שינקנסן Kodama לטוקיו (~35 דק׳).</li></ol></div>
+  </div>
+
+  <h3 class=&quot;rangehdr&quot;>🎌 עצירות טבע וחניות</h3>
+  <div id=&quot;izu-attr&quot;></div>
+
+  <div class=&quot;panel&quot;>
+    <h3>🥢 אסטרטגיית אוכל — איזו</h3>
+    <p><b>ביושר: אין מסעדת GF ייעודית בטוחה בכל חצי‑האי.</b> התוכנית: ארוחות ערב = קאיסקי מתואם בריוקאן (ראו לשונית הלינות), <b>טמארי של נועה בכל ארוחה</b>, וקנייה עצמית לצהריים/גיבוי. סופרים עם חניה: ב‑<b>איטו</b> (צפונית לאטגאווה) וב<b>שימודה</b> (דרומה). בטוֹאי הכפרית — לקנות גיבוי מראש או בשוזנג׳י. ווסאבי טרי לסשימי בטוח; להיזהר משפופרות ורטבים מעורבים. הביאו בקבוק טמארי מוסמך מהבית/טוקיו — בסופר המקומי לא תמיד יש (ולעיתים מכיל חיטה).</p>
+    <details class=&quot;src&quot;><summary>מקורות (איזו)</summary>
+      <a href=&quot;https://www.izu-biwa.jp/&quot; target=&quot;_blank&quot;>Musouan Biwa (רשמי)</a>
+      <a href=&quot;https://suiko.by-onko-chishin.com/en/&quot; target=&quot;_blank&quot;>IZU RETREAT SUIKO (רשמי)</a>
+      <a href=&quot;https://www.japan-guide.com/e/e6308.html&quot; target=&quot;_blank&quot;>חוף Jogasaki</a>
+      <a href=&quot;https://www.japan-guide.com/e/e6315.html&quot; target=&quot;_blank&quot;>הר Omuro</a>
+      <a href=&quot;https://www.japan-guide.com/e/e6313.html&quot; target=&quot;_blank&quot;>Kawazu-Nanadaru</a>
+      <a href=&quot;https://www.rome2rio.com/s/Izu-Atagawa/Tokyo&quot; target=&quot;_blank&quot;>אטגאווה→טוקיו</a>
+      <a href=&quot;https://www.japanryokanguide.com/en/blog/gluten-free-ryokans-japan&quot; target=&quot;_blank&quot;>מדריך ריוקאנים ללא גלוטן</a>
+    </details>
+  </div>
+</section>
+
+<p class=&quot;foot-disc&quot;>קטע 2 מתוך המסלול. מחקר מאומת (אוגוסט 2026). זכרו: תעריפי/לו״ז מעבורת ושעות אטרקציות — לאמת סמוך לנסיעה; מזג אוויר של עונת הטייפונים עשוי לשבש הפלגות ותוכניות חוף.</p>
+</div>
+
+<script>
+document.querySelectorAll('nav.tabs button').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('section.pg').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active'); document.getElementById(b.dataset.t).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+document.querySelectorAll('.copybtn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var el=document.getElementById(btn.dataset.c);
+    var txt=el.innerText.replace(/^(העתק|Copy)\s*/,'');
+    var ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta);
+    ta.select(); try{document.execCommand('copy');}catch(e){}
+    document.body.removeChild(ta); var o=btn.innerText; btn.innerText='✓ הועתק'; setTimeout(()=>btn.innerText=o,1500);
+  });
+});
+
+function gmap(q){return 'https://www.google.com/maps/search/?api=1&amp;query='+encodeURIComponent(q);}
+var ATTR={
+ 'shiz-attr':{
+   short:[
+     {an:'Yaizu Sakana Center — שוק דגים',aw:'אולם פירות ים גדול: טונה ובוניטו טריים, דוכני אוכל. מרכזי לאסטרטגיית האוכל.',pk:'🅿️ חניה חופשית, גדולה · ~09:00–17:00 (חלק מימי ד׳ סגור)',gf:'GF: סשימי טרי לבת עם הטמארי של נועה',q:'Yaizu Sakana Center'},
+     {an:'נמל יאיזו + פארקי חוף',aw:'טיילות ים ונמל דייגים ~10 דק׳ מהריוקאן — נוף רגוע.',pk:'🅿️ חניות חוף מקומיות',gf:'GF: גיבוי מהסופר/קומביני',q:'Yaizu Fishing Port Shizuoka'}
+   ],
+   med:[
+     {an:'מישור ניהונדאירה + רכבל לקונוזאן טושוגו',aw:'מישור 307 מ׳ עם פנורמה על מפרץ סורוגה ומטעי תה; רכבל 5 דק׳ אל מקדש קונוזאן שעל הצוק. כיף לנוער.',pk:'🅿️ חניה חופשית באתר (90+15 מקומות) · רכבל ~09:10–16:45',gf:'GF: לשאת אוכל בטוח',q:'Nihondaira Ropeway Shizuoka'},
+     {an:'יער האורנים מיהו נו מאטסובארה',aw:'חורשת אורנים שחורים לאורך 7 ק״מ ותצפית הקלאסית &quot;אורנים + פוג׳י מעבר למפרץ&quot; (יוניסק&quot;ו). שטוח וקל.',pk:'🅿️ מגרש חוף (173 מקומות), חינם · ~15–20 דק׳ הליכה לחוף',gf:'GF: לשאת חטיפים',q:'Miho no Matsubara'},
+     {an:'מישורי תה מאקינוהארה/פוג׳ידה',aw:'שיזואוקה = בירת התה של יפן. מדרונות תה ירוקים ומצולמים, ירוקים בספטמבר.',pk:'🅿️ חניות ברי־הדרך של בתי התה',gf:'GF: תה ירוק בטוח; להיזהר מממתקים',q:'Makinohara tea fields Shizuoka'},
+     {an:'נמל שימיזו / S-Pulse Dream Plaza',aw:'טיילת נמל עם גלגל ענק וחנויות, וטרמינל המעבורת. גיבוי טוב לגשם/נוער.',pk:'🅿️ חניונים גדולים בתשלום',gf:'GF: גיבוי מהסופר',q:'S-Pulse Dream Plaza Shimizu'}
+   ]
+ },
+ 'izu-attr':{
+   short:[
+     {an:'כף Koibito (Lover\'s Cape), טוֹאי',aw:'תצפית שקיעה עם פוג׳י מעל מפרץ סורוגה — אחד מחופי השקיעה היפים ביפן. להגיע לפני החשכה (חסום אחרי 17:00, לא מואר).',pk:'🅿️ חניה בכף — לאמת במפה',gf:'—',q:'Koibito Misaki Toi Izu'},
+     {an:'מכרה הזהב של טוֹאי',aw:'מכרה זהב לשעבר להליכה, מטיל זהב 200 ק״ג למגע, מוזיאון קטן. גיבוי לגשם/נוער.',pk:'🅿️ חניה באתר',gf:'—',q:'Toi Gold Mine Izu'},
+     {an:'חוף Atagawa YOU-Yu + גן התנינים',aw:'חוף בהליכה מ‑SUIKO; גן טרופי ותנינים סמוך (2–12 דק׳) — חידוש לנוער/גיבוי גשם.',pk:'🅿️ חניות מקומיות',gf:'—',q:'Atagawa Banana Wani Garden'}
+   ],
+   med:[
+     {an:'חוף Jogasaki + גשר תלוי Kadowaki',aw:'הצילום האייקוני של איזו: גשר תלוי 48 מ׳ מעל צוקי לבה, שביל חוף ומגדלור. חינם. &quot;וואו&quot; לנוער.',pk:'🅿️ חניון מטבעות ~¥500 · 25 דק׳ מאטגאווה',gf:'GF: לשאת אוכל',q:'Kadowaki Suspension Bridge Jogasaki'},
+     {an:'הר Omuro (Omuroyama)',aw:'חרוט וולקני מכוסה דשא; רכבל הלוך‑ושוב ¥1,000 וטבעת מכתש 15–30 דק׳ עם נוף 360°. תגמול משפחתי קל.',pk:'🅿️ חניה גדולה בבסיס · 09:00–17:15 · 23 דק׳ מאטגאווה',gf:'GF: לשאת אוכל',q:'Mt Omuro Izu chairlift'},
+     {an:'שבעת מפלי Kawazu + גשר לולאה',aw:'שביל נהר 1 ק״מ (~שעה, חינם) והגשר הכפול הדרמטי. משתלב ביום המעבר.',pk:'🅿️ חניית ראש‑שביל · 30 דק׳ מאטגאווה',gf:'GF: ווסאבי/פרי בטוחים',q:'Kawazu Nanadaru Waterfalls'},
+     {an:'מפלי Joren + חוות ווסאבי',aw:'מפל 25 מ׳ (~200 מדרגות) וגלידת ווסאבי טרי — עצירה טבעית ביום המעבר.',pk:'🅿️ חניה חופשית גדולה בכביש 414',gf:'GF: ווסאבי טרי בטוח (לא שפופרת)',q:'Joren Falls Izu'},
+     {an:'חוף Shirahama + עיר שימודה',aw:'~700 מ׳ חול לבן ומים צלולים; ספטמבר חמים ופחות עמוס. יום חוף לנוער, משתלב עם שימודה.',pk:'🅿️ חניית חוף בתשלום (מתמלאת בסופ״ש — להקדים) · 40–50 דק׳',gf:'GF: גיבוי מהסופר בשימודה',q:'Shirahama Beach Shimoda'},
+     {an:'כף Irozaki (הקצה הדרומי)',aw:'כף דרמטי עם מגדלור ומקדש בסלע, שיט תצפית ~25 דק׳. חצי יום, משתלב עם שימודה.',pk:'🅿️ חניות בתשלום · 50+ דק׳',gf:'GF: לשאת אוכל',q:'Cape Irozaki Izu'}
+   ]
+ }
+};
+function attrBlock(list){
+  var h='';
+  list.forEach(function(a){
+    h+='<div class=&quot;attr&quot;><div class=&quot;an&quot;>'+a.an+'</div><div class=&quot;aw&quot;>'+a.aw+'</div>'+
+       '<div class=&quot;pk&quot;>'+a.pk+'</div>'+(a.gf!=='—'?'<div class=&quot;gf&quot;>'+a.gf+'</div>':'')+
+       '<div class=&quot;mp&quot;><a class=&quot;maplink&quot; target=&quot;_blank&quot; href=&quot;'+gmap(a.q)+'&quot;>🗺️ מפה</a></div></div>';
+  });
+  return h;
+}
+Object.keys(ATTR).forEach(function(id){
+  var box=document.getElementById(id);
+  box.innerHTML='<div class=&quot;rangehdr&quot; style=&quot;font-size:15px;&quot;>טווח קצר (עד ~3 ק״מ מהבסיס)</div>'+attrBlock(ATTR[id].short)+
+                '<div class=&quot;rangehdr&quot; style=&quot;font-size:15px;&quot;>טווח בינוני (עד ~10 ק״מ ומעט מעבר)</div>'+attrBlock(ATTR[id].med);
+});
+</script>
+</body>
+</html>
+" title="🚗 שיזואוקה + איזו"></iframe>
+<iframe class="pane " id="pane-tk" srcdoc="<!DOCTYPE html>
+<html lang=&quot;he&quot; dir=&quot;rtl&quot;>
+<head>
+<meta charset=&quot;UTF-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+<title>מדריך יפן ללא גלוטן — קטע 3: טוקיו</title>
+<style>
+  :root{
+    --ink:#1f2937; --muted:#5b6675; --line:#e2e8f0; --bg:#f5f7fa; --card:#fff;
+    --pur:#3b2f7a; --pur2:#5346a8; --sky:#ece9fb;
+    --green:#137a4b; --greenbg:#e4f5ec; --teal:#0d6d78; --tealbg:#e2f4f6;
+    --amber:#9a6a00; --amberbg:#fdf3dd; --red:#b23b3b; --redbg:#fbe8e8;
+    --shadow:0 2px 10px rgba(30,25,80,.08);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--ink);
+    font-family:&quot;Segoe UI&quot;,&quot;Assistant&quot;,&quot;Heebo&quot;,Arial,&quot;Noto Sans Hebrew&quot;,sans-serif;
+    line-height:1.7; font-size:16px; direction:rtl; text-align:right;}
+  a{color:var(--pur2);}
+  .wrap{max-width:1020px; margin:0 auto; padding:0 16px 60px;}
+  header.hero{background:linear-gradient(135deg,#2c2160,#5346a8); color:#fff; padding:30px 16px 26px;}
+  header.hero .inner{max-width:1020px; margin:0 auto;}
+  header.hero h1{margin:0 0 6px; font-size:26px; font-weight:800;}
+  header.hero p{margin:2px 0; color:#ddd8f5; font-size:15px;}
+  .hero-stats{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;}
+  .hero-stats .stat{background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.2);
+    border-radius:12px; padding:8px 14px; font-size:14px;}
+  .hero-stats .stat b{display:block; font-size:18px;}
+  nav.tabs{position:sticky; top:0; z-index:20; background:#fff; border-bottom:1px solid var(--line);
+    box-shadow:var(--shadow); display:flex; gap:6px; padding:8px 16px; overflow-x:auto;}
+  nav.tabs button{border:none; background:var(--sky); color:var(--pur); font-weight:700; font-size:15px;
+    padding:9px 16px; border-radius:10px; cursor:pointer; white-space:nowrap; font-family:inherit;}
+  nav.tabs button.active{background:var(--pur); color:#fff;}
+  section.pg{display:none; padding-top:22px;} section.pg.active{display:block;}
+  h2.pt{font-size:22px; margin:6px 0 2px; color:var(--pur);}
+  .sub{color:var(--muted); margin:0 0 16px; font-size:14px;}
+  .panel{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px;
+    margin:14px 0; box-shadow:var(--shadow);}
+  .panel h3{margin:0 0 10px; font-size:18px; color:var(--pur); display:flex; align-items:center; gap:8px;}
+  .warn{background:var(--amberbg); border:1px solid #f0d999;}
+  .crit{background:var(--redbg); border:1px solid #eab3b3;}
+  .panel ul{margin:6px 0 0; padding-inline-start:20px;} .panel li{margin:5px 0;}
+  .day{border-inline-start:4px solid var(--pur2); background:#fff; border:1px solid var(--line);
+    border-radius:12px; padding:12px 14px; margin:10px 0;}
+  .day .dhead{font-weight:800; color:var(--pur); font-size:15px;}
+  .day .dtag{font-size:12px; background:var(--sky); color:var(--pur); border-radius:20px; padding:2px 10px;
+    margin-inline-start:8px; font-weight:700;}
+  .day ol{margin:8px 0 0; padding-inline-start:20px;} .day ol li{margin:5px 0;}
+  .cards{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  @media(max-width:720px){.cards{grid-template-columns:1fr;}}
+  .card{background:#fff; border:1px solid var(--line); border-radius:13px; padding:13px 14px;
+    box-shadow:var(--shadow); display:flex; flex-direction:column;}
+  .card .top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
+  .card .nm{font-weight:800; font-size:16px; margin:0;}
+  .card .jp{font-size:12px; color:var(--muted); font-weight:600;}
+  .badge{font-size:11.5px; font-weight:800; padding:3px 9px; border-radius:20px; white-space:nowrap;}
+  .b-ded{background:var(--greenbg); color:var(--green);} .b-aware{background:var(--tealbg); color:var(--teal);}
+  .b-back{background:var(--amberbg); color:var(--amber);} .b-view{background:var(--redbg); color:var(--red);}
+  .card .meta{font-size:13px; color:var(--muted); margin:7px 0 0;} .card .meta b{color:var(--ink);}
+  .card .how{font-size:13.5px; margin:8px 0 0; background:var(--sky); border-radius:9px; padding:8px 10px;}
+  .card .foot{display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:auto; padding-top:10px;}
+  .maplink{background:var(--pur); color:#fff; text-decoration:none; font-weight:700; font-size:13px;
+    padding:7px 12px; border-radius:9px; display:inline-flex; gap:6px; align-items:center;}
+  .verify{font-size:11.5px; color:var(--muted);}
+  .rangehdr{font-size:16px; font-weight:800; color:var(--pur); margin:18px 0 4px; padding-bottom:4px; border-bottom:2px solid var(--sky);}
+  .rangehdr small{font-weight:600; color:var(--muted); font-size:12.5px;}
+  .attr{background:#fff; border:1px solid var(--line); border-radius:12px; padding:11px 13px; margin:9px 0;}
+  .attr .an{font-weight:800;} .attr .aw{font-size:13.5px; color:var(--muted); margin-top:3px;}
+  .attr .st{font-size:12px; color:var(--pur2); font-weight:700; margin-top:3px;}
+  .attr .gf{font-size:12.5px; color:var(--green); margin-top:3px;}
+  .attr .mp{margin-top:6px;}
+  .book{border-inline-start:4px solid #b23b3b; background:#fff; border:1px solid var(--line);
+    border-radius:12px; padding:11px 14px; margin:9px 0;}
+  .book b{color:var(--pur);}
+  .book .tag{font-size:11.5px; font-weight:800; background:var(--redbg); color:var(--red); border-radius:20px; padding:2px 9px; margin-inline-start:6px;}
+  .note{font-size:13px; color:var(--muted); background:#fbfcfe; border:1px dashed var(--line); border-radius:10px; padding:10px 12px; margin-top:10px;}
+  .kanji{background:#fff; border:1px dashed #b9a6e0; border-radius:8px; padding:2px 7px; font-weight:700; display:inline-block; margin:0 2px;}
+  .foot-disc{font-size:12.5px; color:var(--muted); margin-top:26px; text-align:center;}
+  details.src{margin-top:10px;} details.src summary{cursor:pointer; font-weight:700; color:var(--pur2); font-size:13px;}
+  details.src a{display:block; font-size:12px; margin:3px 0; word-break:break-all;}
+</style>
+</head>
+<body>
+
+<header class=&quot;hero&quot;>
+  <div class=&quot;inner&quot;>
+    <h1>מדריך יפן ללא גלוטן — קטע 3: טוקיו</h1>
+    <p>מלון Mitsui Garden Nihonbashi Premier &amp;nbsp;|&amp;nbsp; 29.9–5.10.2026 &amp;nbsp;|&amp;nbsp; 6 לילות</p>
+    <p>דגש: פופ‑קלצ׳ר · שופינג · בידור לבני הנוער, וחוויות אוכל בטוחות ל<b>נועה</b> (הבת הצליאקית)</p>
+    <div class=&quot;hero-stats&quot;>
+      <div class=&quot;stat&quot;><b>6</b> לילות בניהונבאשי</div>
+      <div class=&quot;stat&quot;><b>4</b> מטבחים ייעודיים 100% GF בטווח</div>
+      <div class=&quot;stat&quot;><b>תחבורה</b> רכבת + הליכה</div>
+      <div class=&quot;stat&quot;><b>עונה</b> תחילת אוקטובר, נעים</div>
+    </div>
+  </div>
+</header>
+
+<nav class=&quot;tabs&quot;>
+  <button class=&quot;active&quot; data-t=&quot;plan&quot;>🗓️ מסלול והזמנות</button>
+  <button data-t=&quot;food&quot;>🍽️ אוכל ללא גלוטן</button>
+  <button data-t=&quot;attr&quot;>🎌 אטרקציות</button>
+</nav>
+
+<div class=&quot;wrap&quot;>
+
+<!-- ===== PLAN ===== -->
+<section class=&quot;pg active&quot; id=&quot;plan&quot;>
+  <h2 class=&quot;pt&quot;>מסלול והזמנות · 29.9–5.10</h2>
+  <p class=&quot;sub&quot;>מלון: <b>Mitsui Garden Nihonbashi Premier</b> · ניהונבאשי מורומאצ׳י (לב טוקיו). תחנה צמודה: מיצוקושימאה (קווי גינזה + האנזומון); קאנדה על קו יאמאנוטה ~7 דק׳ הליכה; תחנת טוקיו ~11 דק׳.</p>
+
+  <div class=&quot;panel&quot;>
+    <h3>📍 יתרון המיקום</h3>
+    <p>אחד הבסיסים הכי מקושרים בטוקיו: תחנה אחת מגינזה, קו ישיר לאסאקוסה, הליכה לתחנת טוקיו, וקו יאמאנוטה (מקאנדה) שמחבר ישירות לאקיהברה, אואנו, שיבויה, שינג׳וקו ואיקבוקורו. 4 מטבחים ייעודיים 100% ללא גלוטן נמצאים בטווח נסיעה קצר.</p>
+  </div>
+
+  <div class=&quot;panel crit&quot;>
+    <h3>⏰ הזמנות מראש — לסגור עכשיו (הטיול בעוד ~5–6 שבועות)</h3>
+    <div class=&quot;book&quot;><b>Ghibli Museum מיטاكا</b><span class=&quot;tag&quot;>נמכר תוך דקות</span><br>כרטיסים משוחררים ~חודש מראש דרך Lawson ונחטפים מיד. סגור בימי שלישי. קבעו התראה ליום השחרור.</div>
+    <div class=&quot;book&quot;><b>Shibuya Sky</b> (תצפית גג)<span class=&quot;tag&quot;>כרטיס לפי שעה</span><br>משבצות שקיעה נחטפות — להזמין באתר מראש.</div>
+    <div class=&quot;book&quot;><b>teamLab Planets (טויוסו)</b> ו‑<b>teamLab Borderless (אזאבודאי)</b><span class=&quot;tag&quot;>כרטיס לפי שעה</span><br>שניהם פעילים ב‑2026; כרטיסים מתוזמנים מראש. שים לב: המוזיאון הישן באודאיבה עבר — אלה המיקומים הנוכחיים.</div>
+    <div class=&quot;book&quot;><b>Pokémon Café (ניהונבאשי טאקאשימאיה)</b><span class=&quot;tag&quot;>31 יום מראש</span><br>נפתח 31 יום מראש ונסגר מהר — ממש ליד המלון.</div>
+    <div class=&quot;book&quot;><b>מסעדות GF לנועה</b><span class=&quot;tag&quot;>מקומות ספורים</span><br>Kushiage Su (גינזה, בהזמנה, סגור ב׳) · Tempura Asakusa SAKURA (~10 מקומות, הזמנה מקוונת) · Otsuna Sushi (רוקפוגי, להזמין ולוודא GF).</div>
+    <div class=&quot;book&quot;><b>אופציונלי (יום שלם כל אחד)</b><br>דיסני‑סי/דיסנילנד · סטודיו הארי פוטר של Warner Bros — כרטיסים מראש אם מחליטים להקדיש יום.</div>
+  </div>
+
+  <div class=&quot;panel&quot;>
+    <h3>🗓️ מסלול מוצע (מותאם לימי סגירה וקהל סופ״ש)</h3>
+    <div class=&quot;day&quot;><span class=&quot;dhead&quot;>ג׳ 29.9 — הגעה מאודוארה (אחה״צ)</span><span class=&quot;dtag&quot;>רגוע · ליד המלון</span>
+      <ol><li>הגעה בשינקנסן מאודוארה, צ׳ק‑אין. <b>קניית טמארי ללא גלוטן</b> (&quot;Denemon&quot;) ב‑Seijo Ishii במרתף Shin‑Marunouchi (ליד תחנת טוקיו) — לנועה לכל הטיול.</li>
+      <li>ערב קליל: Tokyo Station Character Street / ניהונבאשי‑Coredo. ארוחה בטוחה לנועה: <b>Oh Nana!</b> (קאנדה, מטבח ייעודי) אם פתוח.</li></ol></div>
+    <div class=&quot;day&quot;><span class=&quot;dhead&quot;>ד׳ 30.9 — אקיהברה + אואנו</span><span class=&quot;dtag&quot;>פופ‑קלצ׳ר · מוזיאונים פתוחים</span>
+      <ol><li>בוקר <b>אקיהברה</b> (אנימה, גיימינג, ארקייד, פיגרים). אחה״צ <b>אואנו</b> (שוק אמייוקו, פארק, מוזיאונים/גן חיות — פתוחים ברביעי).</li>
+      <li>צהריים לנועה: <b>T's Kitchen (אואנו‑הירוקוג׳י)</b> — מטבח ייעודי 100% GF, בדיוק בין אקיהברה לאואנו.</li></ol></div>
+    <div class=&quot;day&quot;><span class=&quot;dhead&quot;>ה׳ 1.10 — teamLab + גינזה</span><span class=&quot;dtag&quot;>חוויה · שופינג</span>
+      <ol><li><b>teamLab</b> (Planets בטויוסו או Borderless באזאבודאי) במשבצת מוזמנת. שאר היום: שופינג בגינזה.</li>
+      <li>ערב לנועה: <b>Kushiage Su</b> (גינזה, שיפודים מטוגנים ייעודיים GF, בהזמנה) או <b>Otsuna Sushi</b> (רוקפוגי, מודע לצליאק).</li></ol></div>
+    <div class=&quot;day&quot;><span class=&quot;dhead&quot;>ו׳ 2.10 — אסאקוסה + סקייטרי</span><span class=&quot;dtag&quot;>תרבות + נוף</span>
+      <ol><li><b>מקדש סנסו‑ג׳י + רחוב נאקמיסה</b>, ואז <b>Tokyo Skytree + Solamachi</b> (מרכז פוקימון, שופינג).</li>
+      <li>צהריים לנועה: <b>Tempura Asakusa SAKURA</b> — טמפורה ייעודית 100% GF, דקה מתחנת אסאקוסה (להזמין!). <span style=&quot;color:var(--red)&quot;>גני הארמון הקיסרי סגורים בשישי.</span></li></ol></div>
+    <div class=&quot;day&quot;><span class=&quot;dhead&quot;>ש׳ 3.10 — שיבויה + הרג׳וקו</span><span class=&quot;dtag&quot;>שיא הנוער · סופ״ש</span>
+      <ol><li><b>Shibuya Parco</b> (Nintendo/Pokémon/Capcom/Jump), <b>109</b>, מפגש ה‑Scramble, ו<b>Shibuya Sky</b> לשקיעה (מוזמן מראש). ואז <b>הרג׳וקו/טאקשיטה</b>.</li>
+      <li>לנועה: <b>T's Kitchen הרג׳וקו</b> (חדש 4/2026) / <b>Little Bird</b> / דונאטס GF ב‑<b>I'm donut?</b>. סופ״ש = צפוף; להקדים.</li></ol></div>
+    <div class=&quot;day&quot;><span class=&quot;dhead&quot;>א׳ 4.10 — יום גמיש (לבחור אחד)</span><span class=&quot;dtag&quot;>אנימה / טבע / יום‑טיול</span>
+      <ol><li><b>Ghibli Museum מיטاكا</b> (אם השגתם כרטיסים) + פארק אינוקאשירה, <b>או</b> יום‑טיול ל<b>קמאקורה</b> (בודהה הענק, חוף — ~שעה ברכבת), <b>או</b> <b>איקבוקורו Sunshine City</b> (אנימה, שקט יותר מסופ״ש בשיבויה) + שינג׳וקו בערב (קבוקיצ׳ו, ראש גודזילה).</li></ol></div>
+    <div class=&quot;day&quot;><span class=&quot;dhead&quot;>ב׳ 5.10 — יציאה</span><span class=&quot;dtag&quot;>קל ליד המלון</span>
+      <ol><li>מוזיאונים סגורים בשני — שופינג אחרון בניהונבאשי/גינזה/תחנת טוקיו, שמירת מזוודות, ויציאה.</li></ol></div>
+  </div>
+</section>
+
+<!-- ===== FOOD ===== -->
+<section class=&quot;pg&quot; id=&quot;food&quot;>
+  <h2 class=&quot;pt&quot;>אוכל ללא גלוטן — לנועה</h2>
+  <p class=&quot;sub&quot;>טוקיו = הסצנה הכי טובה ביפן ל‑GF. בטווח יש 4 מטבחים ייעודיים 100% ללא גלוטן — שם אין זיהום צולב וזו הבחירה הבטוחה ביותר.</p>
+
+  <div class=&quot;panel warn&quot;>
+    <h3>🔑 כלל הזהב (תזכורת)</h3>
+    <p>רוטב סויה (שוֹיוּ) ומיסו מכילים חיטה. תעדפו את המטבחים הייעודיים למטה; במקומות אחרים — <b>הטמארי של נועה</b> + כרטיס אלרגיה. קאנג׳י: <span class=&quot;kanji&quot;>小麦 חיטה</span> <span class=&quot;kanji&quot;>醤油 סויה</span> <span class=&quot;kanji&quot;>大麦 שעורה</span> <span class=&quot;kanji&quot;>麦芽 מאלט</span>.</p>
+  </div>
+
+  <h3 class=&quot;rangehdr&quot;>טווח קצר <small>(עד ~3 ק״מ מהמלון — ניהונבאשי / תחנת טוקיו / גינזה / קאנדה)</small></h3>
+  <div class=&quot;cards&quot; id=&quot;tok-short&quot;></div>
+
+  <h3 class=&quot;rangehdr&quot;>טווח בינוני <small>(עד ~10 ק״מ — אסאקוסה / שיבויה / הרג׳וקו / רוקפוגי)</small></h3>
+  <div class=&quot;cards&quot; id=&quot;tok-med&quot;></div>
+
+  <div class=&quot;panel crit&quot;>
+    <h3>⛔ להימנע (לנועה)</h3>
+    <p><b>סושי מסועֶ (קייטן)</b> — סויה משותפת, &quot;בשר סרטן&quot; מלאכותי וזיהום צולב. במקום: Otsuna Sushi. <b>מונג׳איאקי/אוקונומיאקי</b> רגילים — בלילת חיטה על טאבון משותף. במקום: T's Kitchen. <b>Soranoiro (Tokyo Ramen St)</b> — אטריות אורז חום אך מטבח משותף, לא מבטיחים אפס חיטה → לא לנועה (מתאים לשאר המשפחה).</p>
+  </div>
+
+  <div class=&quot;panel&quot;>
+    <h3>🛒 גיבוי — סופר, דפאצ׳יקה וקומביני ליד המלון</h3>
+    <p><b>Seijo Ishii</b> (מרתף Shin‑Marunouchi) — טמארי &quot;Denemon&quot; (סויה+מלח בלבד) + חטיפי אורז. מרתפי המזון של <b>Mitsukoshi ו‑COREDO Muromachi</b> (צמודים למלון) — פירות, אורז, סושי לזיהוי תווית. קומביני: אוניגירי מלח (בלי סויה), ביצה קשה, יוגורט, אדממה, גבינה, אגוזים, פירות.</p>
+    <details class=&quot;src&quot;><summary>מקורות (אוכל טוקיו)</summary>
+      <a href=&quot;https://www.oh-nana.com/&quot; target=&quot;_blank&quot;>Oh Nana! (רשמי)</a>
+      <a href=&quot;https://glutenfree.co.jp/home-en/&quot; target=&quot;_blank&quot;>T's Kitchen (רשמי)</a>
+      <a href=&quot;https://tabelog.com/en/tokyo/A1301/A130103/13277600/&quot; target=&quot;_blank&quot;>Kushiage Su</a>
+      <a href=&quot;https://hoteltavinos.com/en/blog/asakusa-tempura-asakusa-sakura/&quot; target=&quot;_blank&quot;>Tempura Asakusa SAKURA</a>
+      <a href=&quot;https://www.findmeglutenfree.com/biz/glutenfree-cafe-littlebird/5281617778835456&quot; target=&quot;_blank&quot;>Little Bird</a>
+      <a href=&quot;https://www.legalnomads.com/gluten-free/japan/&quot; target=&quot;_blank&quot;>Legal Nomads — GF Japan</a>
+      <a href=&quot;https://trulytokyo.com/gluten-free-tokyo/&quot; target=&quot;_blank&quot;>Truly Tokyo — GF</a>
+    </details>
+  </div>
+</section>
+
+<!-- ===== ATTR ===== -->
+<section class=&quot;pg&quot; id=&quot;attr&quot;>
+  <h2 class=&quot;pt&quot;>אטרקציות</h2>
+  <p class=&quot;sub&quot;>דגש חזק על פופ‑קלצ׳ר/שופינג/בידור לנוער, פלוס טבע וחוויות. לכל עצירה — סימון אם יש GF בקרבת מקום.</p>
+
+  <div class=&quot;panel warn&quot;>
+    <h3>ℹ️ עדכונים חשובים (2026)</h3>
+    <p><b>פסל הגאנדם באודאיבה הוסר (31.8.2026)</b> — לא יעמוד בזמן הטיול; אודאיבה ירדה בעדיפות. <b>teamLab</b>: Borderless עבר לאזאבודאי, Planets בטויוסו — שניהם פעילים. <b>Ghibli</b>: המוזיאון במיטاكا (טוקיו); &quot;Ghibli Park&quot; הוא ליד נגויה — רחוק, לא רלוונטי ליום‑טיול.</p>
+  </div>
+
+  <h3 class=&quot;rangehdr&quot;>🎌 עצירות</h3>
+  <div id=&quot;tok-attr&quot;></div>
+
+  <div class=&quot;panel&quot;>
+    <h3>🌳 טבע ונוף בהישג יד</h3>
+    <p>תחילת אוקטובר עדיין ירוק (טרם שלכת). <b>גני הארמון הקיסרי</b> (חינם, ~15 דק׳ מהמלון — <span style=&quot;color:var(--red)&quot;>סגור ב׳ ו‑ו׳</span>) · <b>Hamarikyu</b> (גן אדו על המים, פתוח כל יום) · <b>Shinjuku Gyoen</b> (<span style=&quot;color:var(--red)&quot;>סגור ב׳</span>) · <b>פארק אואנו</b> · <b>פארק יויוגי</b> (ליד הרג׳וקו). יום‑טיול: <b>קמאקורה</b> (~שעה, ישיר מתחנת טוקיו).</p>
+    <details class=&quot;src&quot;><summary>מקורות (אטרקציות)</summary>
+      <a href=&quot;https://www.teamlab.art/e/tokyo/&quot; target=&quot;_blank&quot;>teamLab Borderless</a>
+      <a href=&quot;https://www.teamlab.art/e/planets/&quot; target=&quot;_blank&quot;>teamLab Planets</a>
+      <a href=&quot;https://www.ghibli-museum.jp/en/tickets/&quot; target=&quot;_blank&quot;>Ghibli Museum — כרטיסים</a>
+      <a href=&quot;https://www.unicorn-gundam-statue.jp/en/&quot; target=&quot;_blank&quot;>פסל הגאנדם (הודעת הסרה)</a>
+      <a href=&quot;https://www.gardenhotels.co.jp/nihonbashi-premier/eng/access/&quot; target=&quot;_blank&quot;>גישה למלון (רשמי)</a>
+    </details>
+  </div>
+</section>
+
+<p class=&quot;foot-disc&quot;>קטע 3 מתוך המסלול. מחקר מאומת (אוגוסט 2026). כרטיסים מתוזמנים (Ghibli, Shibuya Sky, teamLab, Pokémon Café) ומסעדות GF קטנות — להזמין מראש ולאמת ב‑Google Maps סמוך לביקור.</p>
+</div>
+
+<script>
+document.querySelectorAll('nav.tabs button').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('section.pg').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active'); document.getElementById(b.dataset.t).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+function gmap(q){return 'https://www.google.com/maps/search/?api=1&amp;query='+encodeURIComponent(q);}
+var BADGE={ded:['b-ded','מטבח ייעודי 100% ללא גלוטן'],aware:['b-aware','מודע לצליאק'],back:['b-back','גיבוי · סופר/קומביני'],view:['b-view','לא לנועה · זהירות']};
+
+var DATA={
+ 'tok-short':[
+   {nm:'Oh Nana!',jp:'オーナナ · וואשוקו',lvl:'ded',type:'🍱 יפני ביתי',dist:'~1–1.5 ק״מ (קאנדה)',how:'מטבח 100% ללא גלוטן — דאשי וכל התבלינים GF, אז כל התפריט בטוח (טמפורה, קארי, קاراage, בנטו לקחת לימי רכבת). לאשר יום סגירה בטלפון 03-3527-1359.',price:'₪₪ · ~¥1,500–2,500',ver:'אומת 8/2026',q:'Oh Nana gluten free Kanda Tokyo'},
+   {nm:&quot;T's Kitchen — אואנו‑הירוקוג׳י&quot;,jp:'グルテンフリー Tʼズ',lvl:'ded',type:'🍜 יפני/ראמן',dist:'~2 ק״מ צפונה (סואהירוצ׳ו)',how:'המסעדה המוסמכת הראשונה ללא גלוטן באסיה — ראמן, קاراage, גיוזה, אוקונומיאקי, עוגות. הכול מסומן. סגור ברביעי; בוקר 7:00–9:30.',price:'₪₪',ver:'אומת 8/2026 (אתר רשמי)',q:&quot;T's Kitchen Ueno Okachimachi gluten free&quot;},
+   {nm:'Kushiage Su',jp:'串揚げ スー · שיפודים',lvl:'ded',type:'🍢 מטוגן (ערב)',dist:'~3 ק״מ דרומה (גינזה)',how:'קושיאגה 100% GF (בלילת אורז), בעלים צליאק — קורס בהזמנה בלבד. הזדמנות נדירה למטוגן בלי זיהום צולב. סגור ב׳.',price:'₪₪₪ · קורס ~¥13,000',ver:'אומת 8/2026 (Tabelog)',q:'Gluten Free Kushiage Su Ginza Tokyo'},
+   {nm:'Seijo Ishii — Shin-Marunouchi',jp:'成城石井 · סופר',lvl:'back',type:'🛒 סופרמרקט',dist:'~1 ק״מ (מרתף, תחנת טוקיו)',how:'לקנות טמארי &quot;Denemon&quot; (伝右衛門 — סויה+מלח בלבד, בלי חיטה) לנועה לכל הטיול, וחטיפי אורז/GF. לסרוק תוויות (小麦).',price:'—',ver:'רשת פעילה 8/2026',q:'Seijo Ishii Shin-Marunouchi Building Tokyo'}
+ ],
+ 'tok-med':[
+   {nm:'Tempura Asakusa SAKURA',jp:'天ぷら 浅草 さくら',lvl:'ded',type:'🍤 טמפורה',dist:'~4 ק״מ צפ‑מז (אסאקוסה)',how:'טמפורה 100% GF (בלילת אורז + רטבים GF), דקה מתחנת אסאקוסה. כל פריט בטוח. ~10 מקומות — להזמין מקוון. משתלב עם סנסו‑ג׳י.',price:'₪₪₪ · ~¥6,800–7,800',ver:'אומת 4/2026',q:'Tempura Asakusa Sakura gluten free'},
+   {nm:'Otsuna Sushi',jp:'おつな寿司 · סושי',lvl:'aware',type:'🍣 סושי',dist:'~5–6 ק״מ דרומ‑מע (רוקפוגי)',how:'לא ייעודי אך מחזיקים סויה ללא גלוטן והצוות מבין צליאק (ביקורות עד 1/2026). להזמין ולציין צליאק, להציג כרטיס אלרגיה. להיזהר מפונזו/ווסאבי מלאכותי.',price:'₪₪–₪₪₪',ver:'ביקורות עד 1/2026',q:'Otsuna Sushi Roppongi Tokyo'},
+   {nm:&quot;T's Kitchen — הרג׳וקו / רוקפוגי&quot;,jp:'סניפים ייעודיים',lvl:'ded',type:'🍜 יפני/ראמן',dist:'~7–9 ק״מ (הרג׳וקו חדש 4/2026)',how:'סניפים 100% GF — לשלב עם שופינג בהרג׳וקו/רוקפוגי. אפשר להזמין הכול. ימי סגירה משתנים לפי סניף.',price:'₪₪',ver:'הרג׳וקו נפתח 4/2026',q:&quot;T's Kitchen Harajuku gluten free&quot;},
+   {nm:'Glutenfree Cafe Little Bird',jp:'リトルバード · קפה',lvl:'ded',type:'🍰 קפה/קינוח',dist:'~8–9 ק״מ מערבה (יויוגי‑אואהארה)',how:'קפה 100% GF — מנות מערביות/יפניות, עוגות ומתוקים. ליד פארק יויוגי. אפשר להזמין חופשי.',price:'₪₪',ver:'אומת 5/2026 (Yelp)',q:'Glutenfree Cafe Little Bird Yoyogi Tokyo'},
+   {nm:'I\'m donut? — שיבויה/הרג\'וקו',jp:'דונאטס · קו GF/טבעוני',lvl:'aware',type:'🍩 קינוח',dist:'~7–8 ק״מ (שיבויה/הרג׳וקו)',how:'קו דונאטס ייעודי GF (קמח אורז) ווגן — עצירת קינוח מעולה לנוער. הזמינות יומית ומוגבלת — לאשר באותו יום שיש GF.',price:'₪',ver:'לאשר זמינות יומית',q:&quot;I'm donut Shibuya Tokyo&quot;},
+   {nm:'Comme\'N Gluten Free',jp:'コム・ン · מאפייה',lvl:'ded',type:'🥐 מאפייה',dist:'~11–12 ק״מ דרומ‑מע (סטגאיה)',how:'מאפייה ייעודית 100% GF — באגט, קרואסון, כריכים. מעט מעבר ל‑10 ק״מ — עקיפה לחובבי מאפים. לאמת שעות לפני נסיעה ארוכה.',price:'₪₪',ver:'רשום 2026 · לאמת',q:&quot;Comme'N Gluten Free Okusawa Setagaya&quot;}
+ ]
+};
+var ATTR={
+ 'tok-attr':{
+   short:[
+     {an:'Pokémon Center DX + Pokémon Café',aw:'המרכז הגדול בטוקיו + קפה פוקימון (בהזמנה, ~31 יום מראש). משיכה גבוהה לנוער — ממש ליד המלון.',st:'ניהונבאשי טאקאשימאה (~10 דק׳ הליכה)',gf:'GF: בתוך קניון עם קומת מזון — אזור ידידותי'},
+     {an:'אקיהברה (&quot;עיר החשמל&quot;)',aw:'אנימה, מנגה, גיימינג רטרו ומודרני, ארקייד, maid cafés, פיגרים וקלפים — לב הפופ‑קלצ׳ר. חצי עד יום שלם.',st:'אקיהברה (~4 דק׳ ברכבת)',gf:'GF: T\'s Kitchen אואנו‑הירוקוג׳י בקרבת מקום'},
+     {an:'גינזה',aw:'שופינג דגל (Uniqlo, Ginza Six, Itoya, Muji), חוויית קמעונאות יוקרתית + תרבות גאדג׳טים של Sony.',st:'גינזה (~3 דק׳, קו גינזה ישיר)',gf:'GF: Kushiage Su כאן; מסעדות מודעות'},
+     {an:'Tokyo Station Character Street',aw:'רחוב תת‑קרקעי עם ~30 חנויות דמויות (פוקימון, ג׳יבלי, Jump, Kitty), &quot;Ramen St&quot; ו&quot;Okashi Land&quot;. מילוי מושלם לערב ההגעה/יום גשום.',st:'תחנת טוקיו (~11 דק׳ הליכה)',gf:'GF: דפאצ׳יקה סמוך; לנועה — לזהות תוויות'},
+     {an:'ניהונבאשי · Mitsukoshi / COREDO',aw:'הגשר ההיסטורי וחנות הכלבו העתיקה ביפן, צמוד למלון — טיול אוכל/תרבות רגוע לערב ראשון.',st:'מיצוקושימאה (צמוד)',gf:'GF: מרתפי מזון ידידותיים'}
+   ],
+   med:[
+     {an:'שיבויה — Scramble · Shibuya Sky · Parco · 109',aw:'אשכול הנוער מס\' 1: מפגש ה‑Scramble, תצפית גג Shibuya Sky, ו‑Parco (Nintendo Tokyo, Pokémon, Capcom, Jump), ו‑109 לאופנת נוער.',st:'שיבויה (~25–30 דק׳, קו גינזה ישיר)',gf:'GF: T\'s Kitchen הרג\'וקו / Little Bird / I\'m donut? בקרבת מקום'},
+     {an:'הרג\'וקו / רחוב טאקשיטה',aw:'אופנת קוואי, קרפים, וינטג\', קוספליי, פורי‑קורה. משיכה גבוהה מאוד (במיוחד לבנות). צמוד לשיבויה.',st:'הרג\'וקו (~30 דק\', יאמאנוטה)',gf:'GF: טאקשיטה עצמו קשה (רחוב מטוגן); עדיף לאורך אומוטסאנדו'},
+     {an:'אסאקוסה (סנסו‑ג\'י) + Tokyo Skytree',aw:'מקדש ורחוב נאקמיסה + המגדל הגבוה ביפן וקניון Solamachi (מרכז פוקימון, אקווריום). לשלב יחד.',st:'אסאקוסה (~15–18 דק\', קו גינזה ישיר)',gf:'GF: Tempura Asakusa SAKURA כאן — אחד האזורים המודעים ביותר'},
+     {an:'teamLab Planets (טויוסו)',aw:'מוזיאון דיגיטלי סוחף, יחף/מים — מאוד פוטוגני לנוער. הוארך עד סוף 2027. כרטיס מתוזמן.',st:'שין‑טויוסו (~30 דק\')',gf:'GF: מבודד יחסית — לתכנן אוכל מראש'},
+     {an:'teamLab Borderless (אזאבודאי)',aw:'המוזיאון הסוחף שעבר לאזאבודאי הילס (מ‑2024) — חוויה מדהימה. כרטיס מתוזמן מראש.',st:'קאמייאצ\'ו/אזאבודאי (~30–35 דק\')',gf:'GF: מסעדות יוקרה בסביבה'},
+     {an:'אואנו — פארק, מוזיאונים, גן חיות',aw:'פארק, מוזיאון לאומי, מדע וטבע, גן חיות (פנדות), ושוק אמייוקו לשופינג זול. <span style=&quot;color:#b23b3b&quot;>מוזיאונים+גן חיות סגורים בשני.</span>',st:'אואנו (~10 דק\')',gf:'GF: T\'s Kitchen אואנו‑הירוקוג\'י צמוד'},
+     {an:'שינג\'וקו — קבוקיצ\'ו + Gyoen',aw:'שכונת נאון ובידור (ראש גודזילה, ארקייד/VR), סמטת Omoide Yokocho, ופארק Shinjuku Gyoen לרוגע.',st:'שינג\'וקו (~20–25 דק\')',gf:'GF: מגוון ענק — יש ספוטים GF; Omoide Yokocho עצמו מסוכן'},
+     {an:'איקבוקורו — Sunshine City',aw:'מרכז פוקימון Mega Tokyo, Animate ענק, Otome Road, אקווריום, Namja Town — אלטרנטיבה שקטה יותר לאקיהברה.',st:'איקבוקורו (~20 דק\')',gf:'GF: אזור גדול — יש אפשרויות'},
+     {an:'Ghibli Museum מיטاكا',aw:'מוזיאון סטודיו ג\'יבלי — קסום לחובבים. קטן ונעול על כרטיסים. <span style=&quot;color:#b23b3b&quot;>סגור בשלישי.</span> כרטיסים ~חודש מראש (Lawson).',st:'מיטاكا (~50–60 דק\', קו צ\'ואו + אוטובוס)',gf:'GF: מוגבל — לשאת אוכל בטוח'},
+     {an:'אודאיבה',aw:'קניונים ותצפית מפרץ. <span style=&quot;color:#b23b3b&quot;>פסל הגאנדם הוסר 8/2026</span> — ירד בעדיפות; חנות Gundam Base אולי נותרה.',st:'יוריקאמומה משימבאשי (~35–40 דק\')',gf:'GF: מזנוני קניון — מעורב'}
+   ]
+ }
+};
+function card(p){var b=BADGE[p.lvl];var d=document.createElement('div');d.className='card';
+  d.innerHTML='<div class=&quot;top&quot;><div><p class=&quot;nm&quot;>'+p.nm+'</p><div class=&quot;jp&quot;>'+p.jp+' · '+p.type+'</div></div>'+
+  '<span class=&quot;badge '+b[0]+'&quot;>'+b[1]+'</span></div>'+
+  '<div class=&quot;meta&quot;><b>מרחק:</b> '+p.dist+' &amp;nbsp;|&amp;nbsp; <b>מחיר:</b> '+p.price+'</div>'+
+  '<div class=&quot;how&quot;>'+p.how+'</div>'+
+  '<div class=&quot;foot&quot;><span class=&quot;verify&quot;>✓ '+p.ver+'</span><a class=&quot;maplink&quot; target=&quot;_blank&quot; href=&quot;'+gmap(p.q)+'&quot;>🗺️ מפה</a></div>';
+  return d;}
+Object.keys(DATA).forEach(function(id){var box=document.getElementById(id);DATA[id].forEach(function(p){box.appendChild(card(p));});});
+function attrBlock(list){var h='';list.forEach(function(a){
+  h+='<div class=&quot;attr&quot;><div class=&quot;an&quot;>'+a.an+'</div><div class=&quot;aw&quot;>'+a.aw+'</div><div class=&quot;st&quot;>🚉 '+a.st+'</div><div class=&quot;gf&quot;>'+a.gf+'</div>'+
+  '<div class=&quot;mp&quot;><a class=&quot;maplink&quot; target=&quot;_blank&quot; href=&quot;'+gmap(a.an+' Tokyo')+'&quot;>🗺️ מפה</a></div></div>';});return h;}
+Object.keys(ATTR).forEach(function(id){var box=document.getElementById(id);
+  box.innerHTML='<div class=&quot;rangehdr&quot; style=&quot;font-size:15px;&quot;>טווח קצר (עד 3 ק״מ)</div>'+attrBlock(ATTR[id].short)+
+                '<div class=&quot;rangehdr&quot; style=&quot;font-size:15px;&quot;>טווח בינוני (עד 10 ק״מ)</div>'+attrBlock(ATTR[id].med);});
+</script>
+</body>
+</html>
+" title="🎌 טוקיו"></iframe>
+<iframe class="pane " id="pane-noa" srcdoc="<!DOCTYPE html>
+<html lang=&quot;he&quot; dir=&quot;rtl&quot;>
+<head>
+<meta charset=&quot;UTF-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+<title>כרטיס תזונה — נועה (ללא גלוטן)</title>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0; background:#eef4f1; color:#1f2937;
+    font-family:&quot;Segoe UI&quot;,&quot;Assistant&quot;,&quot;Heebo&quot;,Arial,&quot;Noto Sans Hebrew&quot;,sans-serif; line-height:1.65;}
+  .jp{font-family:&quot;Yu Gothic&quot;,&quot;Hiragino Kaku Gothic Pro&quot;,&quot;Noto Sans JP&quot;,sans-serif;}
+  .bar{max-width:760px; margin:0 auto; padding:14px 16px; display:flex; gap:10px; flex-wrap:wrap; justify-content:space-between; align-items:center;}
+  .bar h1{font-size:17px; margin:0; color:#15704f;}
+  .btn{background:#15704f; color:#fff; border:none; border-radius:9px; padding:9px 16px; font-weight:800; font-size:14px; cursor:pointer; font-family:inherit;}
+  .wrap{max-width:760px; margin:0 auto 40px; padding:0 16px;}
+  .card{background:#fff; border:2px solid #15704f; border-radius:16px; padding:20px 22px; margin:12px 0;
+    box-shadow:0 3px 14px rgba(20,90,60,.10);}
+  .card.jpcard{direction:ltr; text-align:left;}
+  .hdr{background:#15704f; color:#fff; margin:-20px -22px 14px; padding:12px 22px; border-radius:13px 13px 0 0;
+    font-weight:800; font-size:19px; text-align:center;}
+  .lead{font-size:16px; margin:0 0 10px;}
+  .sec{margin:12px 0 4px; font-weight:800; font-size:15px; color:#15704f; border-bottom:2px solid #e0efe8; padding-bottom:3px;}
+  ul{margin:6px 0; padding-inline-start:22px;} li{margin:3px 0; font-size:14.5px;}
+  .ok{color:#137a4b;} .soft{color:#5b6675;}
+  .ask{background:#eef6ff; border:1px solid #cddcf0; border-radius:10px; padding:10px 12px; margin:10px 0; font-size:15px;}
+  .big{font-size:17px; font-weight:800; color:#15704f;}
+  .flip{color:#5b6675; font-size:12.5px; text-align:center; margin:6px 0 0;}
+  .he .sec{color:#264d86; border-color:#e2e8f0;}
+  .he .card, .he.card{border-color:#264d86;} .he .hdr, .he.card .hdr{background:#264d86;}
+  @media print{ body{background:#fff;} .bar{display:none;} .wrap{padding:0;} .card{page-break-inside:avoid; box-shadow:none;} }
+</style>
+</head>
+<body>
+<div class=&quot;bar&quot;>
+  <h1>🍃 כרטיס תזונה לנועה — ללא גלוטן</h1>
+  <button class=&quot;btn&quot; onclick=&quot;window.print()&quot;>🖨️ הדפסה / שמירה כ‑PDF</button>
+</div>
+
+<div class=&quot;wrap&quot;>
+
+  <!-- JAPANESE CARD -->
+  <div class=&quot;card jpcard jp&quot;>
+    <div class=&quot;hdr&quot;>グルテンフリーの食事について（お願い）</div>
+    <p class=&quot;lead&quot;>こんにちは。私は健康のため、<b>グルテン（小麦・大麦・ライ麦）を控えています</b>。お手数をおかけしますが、可能な範囲でご配慮いただけますと幸いです。</p>
+
+    <div class=&quot;sec&quot;>控えているもの</div>
+    <ul>
+      <li>小麦・大麦・ライ麦、小麦粉、パン粉</li>
+      <li>醤油・味噌・たれ・めんつゆ（小麦を含むもの）</li>
+      <li>天ぷら・揚げ物、うどん・ラーメン・パスタ、餃子の皮</li>
+      <li>普通のそば（※「十割そば」は大丈夫です）</li>
+    </ul>
+
+    <div class=&quot;ask&quot;>グルテンフリーの「たまり醤油」を持っています。よろしければ、使わせていただけますか？<br>
+    <span class=&quot;soft&quot;>また、可能でしたら調理器具を分けていただけると助かります。</span></div>
+
+    <div class=&quot;sec&quot;>食べられるもの</div>
+    <ul>
+      <li>ご飯、お刺身（醤油なし／持参の醤油で）、塩焼きのお魚・お肉</li>
+      <li>野菜、卵、豆腐、果物 など（本わさびは大丈夫です）</li>
+    </ul>
+
+    <p class=&quot;big&quot; style=&quot;margin-top:12px;&quot;>この料理に小麦は入っていますか？　ご協力ありがとうございます 🙇</p>
+  </div>
+
+  <!-- HEBREW -->
+  <div class=&quot;card he&quot;>
+    <div class=&quot;hdr&quot;>מה כתוב בכרטיס (עברית)</div>
+    <p class=&quot;lead&quot;>מראים את הכרטיס היפני לצוות. בטון מנומס ורגוע, זה מה שהוא אומר:</p>
+    <p>&quot;שלום. אני נשמרת מאכילת גלוטן (חיטה, שעורה, שיפון) מסיבות בריאות, ואשמח להתחשבות ככל האפשר.&quot;</p>
+    <div class=&quot;sec&quot;>נשמרת מ־:</div>
+    <ul>
+      <li>חיטה/שעורה/שיפון, קמח, פירורי לחם.</li>
+      <li>רוטב סויה, מיסו, רטבים — כשמכילים חיטה.</li>
+      <li>טמפורה ומטוגן, אודון/ראמן/פסטה, עטיפת גיוזה.</li>
+      <li>סובה רגילה (רק &quot;juwari&quot; 100% כוסמת בסדר).</li>
+    </ul>
+    <div class=&quot;sec ok&quot;>אוכלת בשמחה:</div>
+    <ul>
+      <li>אורז, סשימי (בלי סויה / עם הטמארי של נועה), דג/בשר בצלייה במלח.</li>
+      <li>ירקות, ביצים, טופו, פירות, ווסאבי טרי.</li>
+    </ul>
+    <div class=&quot;ask&quot;>הכרטיס גם מבקש בעדינות: להשתמש בטמארי ללא גלוטן שנועה הביאה, ואם אפשר — כלים נפרדים. הכול בנימוס, בלי להלחיץ.</div>
+  </div>
+
+  <!-- ENGLISH -->
+  <div class=&quot;card he&quot;>
+    <div class=&quot;hdr&quot;>English</div>
+    <p>&quot;Hello. For health reasons I avoid gluten (wheat, barley, rye). I'd be grateful for your help where possible. I avoid soy sauce/miso that contain wheat, tempura and fried foods, wheat noodles, and regular soba (100% buckwheat is fine). I'm happy with rice, sashimi (without soy sauce), salt-grilled fish or meat, vegetables, eggs, tofu and fruit. I carry my own gluten-free tamari — may I use it? If possible, separate utensils would help. Does this dish contain wheat? Thank you so much.&quot;</p>
+  </div>
+
+  <p class=&quot;flip&quot;>💡 להצגה בנייד או להדפסה (גודל ארנק). כדאי גם צילום מסך בטלפון של נועה כגיבוי בלי רשת.</p>
+</div>
+</body>
+</html>
+" title="🍃 כרטיס נועה"></iframe>
+<iframe class="pane " id="pane-journal" srcdoc="<!DOCTYPE html>
+<html lang=&quot;he&quot; dir=&quot;rtl&quot;>
+<head>
+<meta charset=&quot;UTF-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+<title>יומן המסע — יפן 2026</title>
+<style>
+  :root{
+    --navy:#12294d; --navy2:#1b3a6b; --teal:#0e7c7b; --teal2:#12a3a1;
+    --ink:#1f2a44; --muted:#6b7a90; --line:#e4e9f0; --bg:#f4f7fb; --card:#fff;
+    --warn:#b45309; --ok:#0e7c4a; --danger:#c0392b;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; font-family:&quot;Assistant&quot;,&quot;Heebo&quot;,&quot;Segoe UI&quot;,Arial,sans-serif; color:var(--ink);
+    background:var(--bg); direction:rtl; text-align:right;}
+  .wrap{max-width:820px; margin:0 auto; padding:14px 14px 60px;}
+  header.top{background:linear-gradient(135deg,var(--navy),var(--navy2)); color:#fff;
+    border-radius:16px; padding:16px 18px; margin-bottom:14px;}
+  header.top h1{margin:0; font-size:21px;}
+  header.top p{margin:6px 0 0; font-size:13px; opacity:.85;}
+  .status{font-size:12.5px; margin-top:10px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .dot{width:9px; height:9px; border-radius:50%; background:#ffb020; display:inline-block;}
+  .dot.on{background:#38d39f;}
+  .linkish{color:#bfe0ff; text-decoration:underline; cursor:pointer; background:none; border:none; font:inherit; padding:0;}
+
+  .card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px; margin-bottom:14px;
+    box-shadow:0 1px 3px rgba(20,40,80,.04);}
+  .card h2{margin:0 0 12px; font-size:16px; color:var(--navy2); display:flex; align-items:center; gap:8px;}
+  #formCard.editing{border:2px solid var(--teal); box-shadow:0 0 0 3px rgba(14,124,123,.10);}
+  .editflag{display:none; font-size:12.5px; font-weight:800; color:var(--teal); margin-inline-start:auto;}
+  #formCard.editing .editflag{display:inline;}
+  label{display:block; font-size:13px; font-weight:700; color:var(--muted); margin:10px 0 4px;}
+  input[type=text], input[type=date], textarea, select{
+    width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px; font:inherit;
+    background:#fbfcfe; color:var(--ink); direction:rtl; text-align:right;}
+  textarea{min-height:90px; resize:vertical;}
+  .row2{display:flex; gap:10px; flex-wrap:wrap;}
+  .row2 > div{flex:1; min-width:130px;}
+  .hint{font-size:12px; color:var(--muted); margin-top:4px;}
+
+  .btn{border:none; border-radius:11px; padding:11px 18px; font:inherit; font-weight:800; cursor:pointer;}
+  .btn.primary{background:var(--teal); color:#fff;}
+  .btn.primary:active{background:var(--teal2);}
+  .btn.ghost{background:#eef3f9; color:var(--navy2);}
+  .btn.sm{padding:7px 12px; font-size:13px; border-radius:9px;}
+  .btnrow{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; align-items:center;}
+
+  .picker{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .picker input[type=file]{display:none;}
+  .thumbs{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;}
+  .thumb{position:relative; width:74px; height:74px; border-radius:10px; overflow:hidden; border:1px solid var(--line); background:#eef2f7;}
+  .thumb img{width:100%; height:100%; object-fit:cover;}
+  .thumb button{position:absolute; top:2px; inset-inline-start:2px; background:rgba(0,0,0,.6); color:#fff;
+    border:none; border-radius:50%; width:20px; height:20px; cursor:pointer; font-size:12px; line-height:1;}
+
+  .filterbar{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:12px;}
+  .filterbar select{width:auto; min-width:160px;}
+  .count{font-size:12.5px; color:var(--muted);}
+
+  .day{margin:0 0 8px; font-size:13px; font-weight:800; color:var(--navy2);
+    background:#e8f0fb; display:inline-block; padding:5px 12px; border-radius:20px;}
+  .entry{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin:8px 0 16px;}
+  .entry .meta{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:8px;}
+  .chip{font-size:12px; font-weight:800; padding:4px 10px; border-radius:20px;}
+  .chip.loc{background:#e4f6f5; color:#0b6b6a;}
+  .chip.who{background:#f0eefc; color:#5b4bc4;}
+  .chip.pend{background:#fff3d6; color:#8a5a00;}
+  .acts{margin-inline-start:auto; display:flex; gap:6px;}
+  .iconbtn{background:#f1f5fa; border:1px solid var(--line); border-radius:8px; cursor:pointer; font-size:13px;
+    padding:4px 9px; color:var(--navy2); font-weight:700;}
+  .iconbtn.danger{color:var(--danger);}
+  .entry .txt{white-space:pre-wrap; line-height:1.6; font-size:14.5px; margin:4px 0 0;}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(96px,1fr)); gap:6px; margin-top:10px;}
+  .grid img{width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:9px; cursor:pointer; background:#e9eef5;}
+  .tiny{font-size:11.5px; color:var(--muted);}
+  .empty{text-align:center; color:var(--muted); padding:26px 10px; font-size:14px;}
+
+  .lb{position:fixed; inset:0; background:rgba(8,14,28,.92); display:none; align-items:center; justify-content:center; z-index:100;}
+  .lb.open{display:flex;}
+  .lb img{max-width:94vw; max-height:88vh; border-radius:10px;}
+  .lb .x{position:absolute; top:14px; inset-inline-start:16px; background:#fff; border:none; border-radius:50%;
+    width:40px; height:40px; font-size:20px; cursor:pointer;}
+
+  .setup{background:#fff7e6; border:1px solid #ffe2ab; border-radius:12px; padding:14px 16px; margin-bottom:14px; font-size:13.5px;}
+  .setup b{color:var(--warn);}
+  .toast{position:fixed; bottom:18px; inset-inline-start:50%; transform:translateX(50%);
+    background:var(--navy); color:#fff; padding:10px 18px; border-radius:10px; font-size:13.5px;
+    opacity:0; transition:opacity .25s; z-index:120; pointer-events:none; max-width:90vw; text-align:center;}
+  .toast.show{opacity:1;}
+</style>
+</head>
+<body>
+<div class=&quot;wrap&quot;>
+
+  <header class=&quot;top&quot;>
+    <h1>📸 יומן המסע — יפן 2026</h1>
+    <p>בסוף כל יום: מוסיפים רשמים ותמונות לפי מיקום. הכול נשמר משותף לכל המשפחה.</p>
+    <div class=&quot;status&quot;>
+      <span id=&quot;dot&quot; class=&quot;dot&quot;></span><span id=&quot;statusTxt&quot;>לא מחובר עדיין</span>
+      <button class=&quot;linkish&quot; id=&quot;cfgToggle&quot;>הגדרות חיבור</button>
+      <button class=&quot;linkish&quot; id=&quot;shareBtn&quot; style=&quot;display:none&quot;>🔗 קישור לשיתוף עם המשפחה</button>
+    </div>
+  </header>
+
+  <div class=&quot;card&quot; id=&quot;cfgCard&quot; style=&quot;display:none&quot;>
+    <h2>🔌 חיבור ל‑Google (הדבקה חד‑פעמית במכשיר הזה)</h2>
+    <div class=&quot;setup&quot;>
+      כדי לשמור בענן צריך פעם אחת להדביק כאן את <b>כתובת ה‑Web App</b> שקיבלתם בהקמה
+      (מסתיימת ב‑/exec). אם עדיין לא הקמתם — אפשר להתחיל לכתוב כבר עכשיו, הכול יישמר
+      מקומית במכשיר ויסתנכרן ברגע שתחברו.
+    </div>
+    <label>כתובת ה‑Web App</label>
+    <input type=&quot;text&quot; id=&quot;cfgUrl&quot; placeholder=&quot;https://script.google.com/macros/s/xxxxx/exec&quot; dir=&quot;ltr&quot;>
+    <div class=&quot;btnrow&quot;>
+      <button class=&quot;btn primary sm&quot; id=&quot;cfgSave&quot;>שמור וחבר</button>
+      <button class=&quot;btn ghost sm&quot; id=&quot;cfgClose&quot;>סגור</button>
+    </div>
+  </div>
+
+  <div class=&quot;card&quot; id=&quot;formCard&quot;>
+    <h2>✍️ <span id=&quot;formTitle&quot;>רשומה חדשה</span> <span class=&quot;editflag&quot;>✏️ מצב עריכה</span></h2>
+    <div class=&quot;row2&quot;>
+      <div>
+        <label>מיקום <span class=&quot;tiny&quot;>(אפשר להקליד כל מקום — גם כזה שלא במסלול)</span></label>
+        <input type=&quot;text&quot; id=&quot;fLoc&quot; list=&quot;locList&quot; placeholder=&quot;למשל: קיוטו — פוׂשימי אינארי&quot;>
+        <datalist id=&quot;locList&quot;>
+          <option value=&quot;אוסקה&quot;></option><option value=&quot;קיוטו&quot;></option>
+          <option value=&quot;שיזואוקה&quot;></option><option value=&quot;יאיזו&quot;></option>
+          <option value=&quot;טואי (איזו מערב)&quot;></option><option value=&quot;אטאמאווה (איזו מזרח)&quot;></option>
+          <option value=&quot;טוקיו&quot;></option><option value=&quot;הר פוג׳י / חמישה אגמים&quot;></option>
+          <option value=&quot;חצי‑האי איזו&quot;></option>
+        </datalist>
+      </div>
+      <div>
+        <label>תאריך</label>
+        <input type=&quot;date&quot; id=&quot;fDate&quot;>
+      </div>
+      <div>
+        <label>מי כותב</label>
+        <input type=&quot;text&quot; id=&quot;fWho&quot; list=&quot;whoList&quot; placeholder=&quot;בחר או הקלד שם&quot;>
+        <datalist id=&quot;whoList&quot;></datalist>
+      </div>
+    </div>
+
+    <label>רשמים מהיום / מהמקום</label>
+    <textarea id=&quot;fText&quot; placeholder=&quot;מה אכלנו, מה ראינו, טיפ למי שיבוא אחרינו, איך היה האוכל ללא גלוטן...&quot;></textarea>
+
+    <label>תמונות</label>
+    <div class=&quot;picker&quot;>
+      <label class=&quot;btn ghost sm&quot; for=&quot;fPhotos&quot; style=&quot;margin:0; color:var(--navy2);&quot;>📷 בחר / צלם תמונות</label>
+      <input type=&quot;file&quot; id=&quot;fPhotos&quot; accept=&quot;image/*&quot; multiple>
+      <span class=&quot;hint&quot; id=&quot;photoHint&quot;>כל תמונה מוקטנת אוטומטית לפני שמירה</span>
+    </div>
+    <div class=&quot;thumbs&quot; id=&quot;thumbs&quot;></div>
+
+    <div class=&quot;btnrow&quot;>
+      <button class=&quot;btn primary&quot; id=&quot;saveBtn&quot;>שמור ליומן</button>
+      <button class=&quot;btn ghost&quot; id=&quot;cancelEditBtn&quot; style=&quot;display:none&quot;>בטל עריכה</button>
+      <span class=&quot;tiny&quot; id=&quot;savingTxt&quot;></span>
+    </div>
+  </div>
+
+  <div class=&quot;card&quot;>
+    <h2>🗒️ היומן שלנו</h2>
+    <div class=&quot;filterbar&quot;>
+      <select id=&quot;filterLoc&quot;><option value=&quot;&quot;>כל המיקומים</option></select>
+      <button class=&quot;btn ghost sm&quot; id=&quot;refreshBtn&quot;>↻ רענן</button>
+      <button class=&quot;btn ghost sm&quot; id=&quot;exportBtn&quot;>⬇️ גיבוי JSON</button>
+      <span class=&quot;count&quot; id=&quot;count&quot;></span>
+    </div>
+    <div id=&quot;feed&quot;><div class=&quot;empty&quot;>עדיין אין רשומות — הרשומה הראשונה שלכם תופיע כאן ✨</div></div>
+  </div>
+
+</div>
+
+<div class=&quot;lb&quot; id=&quot;lb&quot;><button class=&quot;x&quot; id=&quot;lbX&quot;>✕</button><img id=&quot;lbImg&quot; src=&quot;&quot; alt=&quot;&quot;></div>
+<div class=&quot;toast&quot; id=&quot;toast&quot;></div>
+
+<script>
+(function(){
+  &quot;use strict&quot;;
+  var K_URL='jjp_url', K_ENTRIES='jjp_entries', K_PENDING='jjp_pending', K_WHO='jjp_who', K_WHOLIST='jjp_wholist';
+  var DEFAULT_WHO=['רן','נרקיס','נועה','עדי','עמית'];
+  var state={ url:'', entries:[], pending:[], formPhotos:[], editingId:null, editingPending:false };
+
+  function load(k,d){ try{ var v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch(e){ return d; } }
+  function save(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+
+  function init(){
+    state.url = localStorage.getItem(K_URL) || '';
+    try{
+      var h = (window.parent &amp;&amp; window.parent!==window) ? window.parent.location.hash : window.location.hash;
+      var m = h &amp;&amp; h.match(/[#&amp;]j=([^&amp;]+)/);
+      if(m){ var u=decodeURIComponent(m[1]); if(u &amp;&amp; u.indexOf('http')===0){ state.url=u; localStorage.setItem(K_URL,u); } }
+    }catch(e){}
+    state.entries = load(K_ENTRIES, []);
+    state.pending = load(K_PENDING, []);
+    document.getElementById('fDate').value = todayStr();
+    var who = localStorage.getItem(K_WHO)||''; if(who) document.getElementById('fWho').value=who;
+    rebuildWhoList();
+    reflectStatus();
+    render();
+    if(state.url){ refresh(); flushPending(); }
+    else { document.getElementById('cfgCard').style.display='block'; }
+  }
+
+  function todayStr(){ var d=new Date(), p=function(n){return (n<10?'0':'')+n;}; return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
+  function uuid(){ return 'e-'+Date.now().toString(36)+'-'+Math.floor(Math.random()*1e6).toString(36); }
+
+  function reflectStatus(){
+    var on=!!state.url;
+    document.getElementById('dot').className='dot'+(on?' on':'');
+    document.getElementById('statusTxt').textContent = on ? 'מחובר ל‑Google · נשמר משותף' : 'עובד מקומית — לא מחובר לענן';
+    document.getElementById('shareBtn').style.display = on ? '' : 'none';
+    document.getElementById('cfgUrl').value = state.url;
+  }
+
+  /* ---- config ---- */
+  document.getElementById('cfgToggle').onclick=function(){ var c=document.getElementById('cfgCard'); c.style.display = c.style.display==='none'?'block':'none'; };
+  document.getElementById('cfgClose').onclick=function(){ document.getElementById('cfgCard').style.display='none'; };
+  document.getElementById('cfgSave').onclick=function(){
+    var u=document.getElementById('cfgUrl').value.trim();
+    if(u &amp;&amp; u.indexOf('http')!==0){ toast('הכתובת צריכה להתחיל ב‑https'); return; }
+    state.url=u; if(u) localStorage.setItem(K_URL,u); else localStorage.removeItem(K_URL);
+    reflectStatus(); document.getElementById('cfgCard').style.display='none';
+    if(u){ toast('מחובר! מסנכרן…'); refresh(); flushPending(); }
+  };
+  document.getElementById('shareBtn').onclick=function(){
+    var base;
+    try{ base = (window.parent &amp;&amp; window.parent!==window) ? window.parent.location.href.split('#')[0] : window.location.href.split('#')[0]; }
+    catch(e){ base = window.location.href.split('#')[0]; }
+    copy(base + '#j=' + encodeURIComponent(state.url));
+  };
+
+  /* ---- photos: pick + downscale ---- */
+  document.getElementById('fPhotos').addEventListener('change', function(ev){
+    var files = Array.prototype.slice.call(ev.target.files||[]); ev.target.value='';
+    if(!files.length) return;
+    document.getElementById('photoHint').textContent='מקטין תמונות…';
+    var done=0;
+    files.forEach(function(f){
+      if(f.type.indexOf('image')!==0){ done++; return; }
+      downscale(f, 1200, 0.82, function(dataUrl){
+        if(dataUrl) state.formPhotos.push({type:'data', data:dataUrl});
+        renderThumbs();
+        done++; if(done===files.length) document.getElementById('photoHint').textContent='כל תמונה מוקטנת אוטומטית לפני שמירה';
+      });
+    });
+  });
+
+  function downscale(file, maxW, quality, cb){
+    var img=new Image(); var url=URL.createObjectURL(file);
+    img.onload=function(){
+      var w=img.width, h=img.height; if(w>maxW){ h=Math.round(h*maxW/w); w=maxW; }
+      var c=document.createElement('canvas'); c.width=w; c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h); URL.revokeObjectURL(url);
+      try{ cb(c.toDataURL('image/jpeg', quality)); }catch(e){ cb(null); }
+    };
+    img.onerror=function(){ URL.revokeObjectURL(url); cb(null); };
+    img.src=url;
+  }
+
+  function renderThumbs(){
+    var box=document.getElementById('thumbs'); box.innerHTML='';
+    state.formPhotos.forEach(function(p,i){
+      var src = p.type==='data' ? p.data : photoUrl(p.id,false);
+      var t=document.createElement('div'); t.className='thumb';
+      t.innerHTML='<img src=&quot;'+src+'&quot;><button title=&quot;הסר&quot;>✕</button>';
+      t.querySelector('button').onclick=function(){ state.formPhotos.splice(i,1); renderThumbs(); };
+      box.appendChild(t);
+    });
+  }
+
+  /* ---- save (new or edit) ---- */
+  document.getElementById('saveBtn').onclick=function(){
+    var loc=document.getElementById('fLoc').value.trim();
+    var text=document.getElementById('fText').value.trim();
+    var who=document.getElementById('fWho').value.trim();
+    var date=document.getElementById('fDate').value || todayStr();
+    if(!loc &amp;&amp; !text &amp;&amp; !state.formPhotos.length){ toast('צריך לפחות מיקום, טקסט או תמונה'); return; }
+    if(who){ localStorage.setItem(K_WHO, who); addWho(who); }
+
+    if(state.editingId){ saveEdit(loc,text,who,date); }
+    else { saveNew(loc,text,who,date); }
+  };
+
+  function saveNew(loc,text,who,date){
+    var localData = state.formPhotos.filter(function(p){return p.type==='data';}).map(function(p){return p.data;});
+    var entry={ id:uuid(), created:new Date().toISOString(), date:date, location:loc, author:who,
+      text:text, photos:[], localPhotos:localData, pending:true };
+    state.pending.push(entry); save(K_PENDING, state.pending);
+    resetForm(); render(); toast('נשמר ✓'); upload(entry);
+  }
+
+  function saveEdit(loc,text,who,date){
+    var id=state.editingId;
+    var keepIds = state.formPhotos.filter(function(p){return p.type==='id';}).map(function(p){return p.id;});
+    var newData = state.formPhotos.filter(function(p){return p.type==='data';}).map(function(p){return p.data;});
+
+    if(state.editingPending){
+      // רשומה שעוד לא סונכרנה — עדכון מקומי בלבד
+      var pe=findIn(state.pending,id);
+      if(pe){ pe.location=loc; pe.text=text; pe.author=who; pe.date=date;
+        pe.localPhotos = newData.slice(); }   // בעריכה מקומית התמונות הן ה-dataURL הנוכחיים
+      save(K_PENDING, state.pending);
+      resetForm(); render(); toast('עודכן ✓');
+      // אם התחברנו בינתיים — יעלה ברענון הבא
+      return;
+    }
+    // רשומת שרת — עדכון אופטימי + upsert
+    var se=findIn(state.entries,id);
+    if(se){ se.location=loc; se.text=text; se.author=who; se.date=date; se.photos=keepIds.slice(); }
+    save(K_ENTRIES, state.entries);
+    resetForm(); render(); toast('מעדכן…');
+    upsert({ id:id, date:date, location:loc, author:who, text:text, keepPhotos:keepIds, photos:newData });
+  }
+
+  function startEdit(id){
+    var e=findIn(state.entries,id); var pending=false;
+    if(!e){ e=findIn(state.pending,id); pending=true; }
+    if(!e) return;
+    state.editingId=id; state.editingPending=pending;
+    document.getElementById('fLoc').value=e.location||'';
+    document.getElementById('fText').value=e.text||'';
+    document.getElementById('fWho').value=e.author||'';
+    document.getElementById('fDate').value=e.date||todayStr();
+    if(pending){ state.formPhotos=(e.localPhotos||[]).map(function(d){return {type:'data',data:d};}); }
+    else { state.formPhotos=(e.photos||[]).map(function(id){return {type:'id',id:id};}); }
+    renderThumbs();
+    document.getElementById('formCard').classList.add('editing');
+    document.getElementById('formTitle').textContent='עריכת רשומה';
+    document.getElementById('saveBtn').textContent='עדכן רשומה';
+    document.getElementById('cancelEditBtn').style.display='';
+    document.getElementById('formCard').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+  document.getElementById('cancelEditBtn').onclick=resetForm;
+
+  function resetForm(){
+    state.editingId=null; state.editingPending=false; state.formPhotos=[];
+    document.getElementById('fLoc').value=''; document.getElementById('fText').value='';
+    document.getElementById('fDate').value=todayStr();
+    renderThumbs();
+    document.getElementById('formCard').classList.remove('editing');
+    document.getElementById('formTitle').textContent='רשומה חדשה';
+    document.getElementById('saveBtn').textContent='שמור ליומן';
+    document.getElementById('cancelEditBtn').style.display='none';
+  }
+
+  /* ---- delete ---- */
+  function deleteEntry(id){
+    var e=findIn(state.entries,id) || findIn(state.pending,id); if(!e) return;
+    var label = e.location ? ('&quot;'+e.location+'&quot;') : 'הרשומה';
+    if(!confirm('למחוק את '+label+'? הפעולה בלתי הפיכה.')) return;
+    state.pending = state.pending.filter(function(x){return x.id!==id;});
+    var wasServer = !!findIn(state.entries,id);
+    state.entries = state.entries.filter(function(x){return x.id!==id;});
+    save(K_PENDING, state.pending); save(K_ENTRIES, state.entries);
+    if(state.editingId===id) resetForm();
+    render(); toast('נמחק ✓');
+    if(wasServer &amp;&amp; state.url){
+      fetch(state.url, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body:JSON.stringify({action:'delete', id:id}) }).catch(function(){});
+    }
+  }
+
+  /* ---- sync ---- */
+  function upload(entry){
+    if(!state.url) return;
+    upsert({ action:'add', id:entry.id, date:entry.date, location:entry.location,
+      author:entry.author, text:entry.text, photos:entry.localPhotos||[] });
+  }
+  function upsert(payload){
+    if(!state.url) return;
+    payload.action='add';
+    fetch(state.url, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify(payload) }).then(function(){ setTimeout(refresh, 2000); }).catch(function(){});
+  }
+  function flushPending(){ if(!state.url) return; state.pending.forEach(function(e){ upload(e); }); }
+
+  var jsonpN=0;
+  function refresh(){
+    if(!state.url) return;
+    var cbName='__jjp_cb_'+(++jsonpN);
+    var s=document.createElement('script');
+    var to=setTimeout(cleanup, 12000);
+    function cleanup(){ try{ delete window[cbName]; }catch(e){ window[cbName]=undefined; } if(s.parentNode) s.parentNode.removeChild(s); clearTimeout(to); }
+    window[cbName]=function(res){
+      cleanup();
+      if(res &amp;&amp; res.ok &amp;&amp; res.entries){
+        state.entries = res.entries; save(K_ENTRIES, state.entries);
+        var ids={}; state.entries.forEach(function(e){ ids[e.id]=1; });
+        state.pending = state.pending.filter(function(e){ return !ids[e.id]; });
+        save(K_PENDING, state.pending);
+        state.entries.forEach(function(e){ if(e.author) addWho(e.author); });
+        render();
+      }
+    };
+    s.src = state.url + (state.url.indexOf('?')>-1?'&amp;':'?') + 'callback='+cbName+'&amp;t='+Date.now();
+    s.onerror=function(){ cleanup(); };
+    document.body.appendChild(s);
+  }
+  document.getElementById('refreshBtn').onclick=function(){ if(state.url){ toast('מרענן…'); refresh(); flushPending(); } else toast('לא מחובר לענן'); };
+
+  /* ---- who list ---- */
+  function addWho(name){ var l=load(K_WHOLIST,[]); if(l.indexOf(name)===-1){ l.push(name); save(K_WHOLIST,l); rebuildWhoList(); } }
+  function rebuildWhoList(){
+    var stored=load(K_WHOLIST,[]); var all=DEFAULT_WHO.slice();
+    stored.forEach(function(n){ if(all.indexOf(n)===-1) all.push(n); });
+    var dl=document.getElementById('whoList'); dl.innerHTML='';
+    all.forEach(function(n){ var o=document.createElement('option'); o.value=n; dl.appendChild(o); });
+  }
+
+  /* ---- render ---- */
+  function findIn(arr,id){ for(var i=0;i<arr.length;i++){ if(arr[i].id===id) return arr[i]; } return null; }
+  function allEntries(){
+    var srv={}; state.entries.forEach(function(e){ srv[e.id]=1; });
+    return state.entries.concat(state.pending.filter(function(e){ return !srv[e.id]; }));
+  }
+  function photoUrl(id, big){ return 'https://drive.google.com/thumbnail?id='+id+'&amp;sz=w'+(big?1600:600); }
+
+  function render(){
+    var data = allEntries();
+    rebuildFilter(data);
+    var f=document.getElementById('filterLoc').value;
+    var view = f ? data.filter(function(e){ return e.location===f; }) : data;
+    view.sort(function(a,b){ if(a.date!==b.date) return a.date<b.date?1:-1; return (a.created<b.created)?1:-1; });
+    document.getElementById('count').textContent = view.length ? (view.length+' רשומות') : '';
+
+    var feed=document.getElementById('feed');
+    if(!view.length){ feed.innerHTML='<div class=&quot;empty&quot;>עדיין אין רשומות — הרשומה הראשונה שלכם תופיע כאן ✨</div>'; return; }
+    var html=''; var lastDate=null;
+    view.forEach(function(e){
+      if(e.date!==lastDate){ html+='<div class=&quot;day&quot;>📅 '+heDate(e.date)+'</div>'; lastDate=e.date; }
+      html+='<div class=&quot;entry&quot; data-id=&quot;'+esc(e.id)+'&quot;>';
+      html+='<div class=&quot;meta&quot;>';
+      if(e.location) html+='<span class=&quot;chip loc&quot;>📍 '+esc(e.location)+'</span>';
+      if(e.author)   html+='<span class=&quot;chip who&quot;>'+esc(e.author)+'</span>';
+      if(e.pending)  html+='<span class=&quot;chip pend&quot;>⏳ ממתין לסנכרון</span>';
+      html+='<span class=&quot;acts&quot;><button class=&quot;iconbtn&quot; data-edit=&quot;'+esc(e.id)+'&quot;>✏️ ערוך</button>'+
+            '<button class=&quot;iconbtn danger&quot; data-del=&quot;'+esc(e.id)+'&quot;>🗑️ מחק</button></span>';
+      html+='</div>';
+      if(e.text) html+='<div class=&quot;txt&quot;>'+esc(e.text)+'</div>';
+      var imgs = e.pending ? (e.localPhotos||[]).map(function(d){return {src:d,full:d};})
+                           : (e.photos||[]).map(function(id){return {src:photoUrl(id,false),full:photoUrl(id,true)};});
+      if(imgs.length){ html+='<div class=&quot;grid&quot;>'; imgs.forEach(function(o){ html+='<img loading=&quot;lazy&quot; src=&quot;'+o.src+'&quot; data-full=&quot;'+o.full+'&quot;>'; }); html+='</div>'; }
+      html+='</div>';
+    });
+    feed.innerHTML=html;
+    Array.prototype.forEach.call(feed.querySelectorAll('.grid img'), function(im){ im.onclick=function(){ openLB(im.getAttribute('data-full')); }; });
+    Array.prototype.forEach.call(feed.querySelectorAll('[data-edit]'), function(b){ b.onclick=function(){ startEdit(b.getAttribute('data-edit')); }; });
+    Array.prototype.forEach.call(feed.querySelectorAll('[data-del]'), function(b){ b.onclick=function(){ deleteEntry(b.getAttribute('data-del')); }; });
+  }
+
+  function rebuildFilter(data){
+    var sel=document.getElementById('filterLoc'); var cur=sel.value;
+    var locs=[]; data.forEach(function(e){ if(e.location &amp;&amp; locs.indexOf(e.location)===-1) locs.push(e.location); });
+    locs.sort();
+    sel.innerHTML='<option value=&quot;&quot;>כל המיקומים</option>'+locs.map(function(l){return '<option>'+esc(l)+'</option>';}).join('');
+    if(locs.indexOf(cur)>-1) sel.value=cur;
+  }
+  document.getElementById('filterLoc').onchange=render;
+
+  document.getElementById('exportBtn').onclick=function(){
+    var data={ exported:new Date().toISOString(), entries:allEntries() };
+    var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='יומן-יפן-2026-גיבוי.json'; a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+  };
+
+  function openLB(src){ document.getElementById('lbImg').src=src; document.getElementById('lb').classList.add('open'); }
+  document.getElementById('lbX').onclick=function(){ document.getElementById('lb').classList.remove('open'); document.getElementById('lbImg').src=''; };
+  document.getElementById('lb').onclick=function(e){ if(e.target.id==='lb'){ this.classList.remove('open'); document.getElementById('lbImg').src=''; } };
+
+  function esc(s){ return String(s).replace(/[&amp;<>&quot;]/g,function(c){return {'&amp;':'&amp;amp;','<':'&amp;lt;','>':'&amp;gt;','&quot;':'&amp;quot;'}[c];}); }
+  function heDate(v){
+    var s=String(v||''); var days=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+    var m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    var d;
+    if(m){ d=new Date(+m[1], +m[2]-1, +m[3]); }
+    else { d=new Date(s); }
+    if(isNaN(d.getTime())) return s;
+    return 'יום '+days[d.getDay()]+', '+d.getDate()+'.'+(d.getMonth()+1)+'.'+d.getFullYear();
+  }
+  function copy(t){ if(navigator.clipboard&amp;&amp;navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(function(){toast('הקישור הועתק ✓');},function(){prompt('העתק את הקישור:',t);}); } else prompt('העתק את הקישור:',t); }
+  var toastT;
+  function toast(m){ var el=document.getElementById('toast'); el.textContent=m; el.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(function(){el.classList.remove('show');},2200); }
+
+  init();
+})();
+</script>
+</body>
+</html>
+" title="📸 יומן המסע"></iframe>
+</div>
+<script>
+  document.querySelectorAll('.topnav button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.topnav button').forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.pane').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      document.getElementById('pane-'+b.dataset.k).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
