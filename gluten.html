@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0f766e">
+<title>סורק גלוטן · Gluten Scanner</title>
+<style>
+  :root{
+    --bg:#0b1220; --card:#141d2e; --card2:#1b2740; --line:#2a3a5c;
+    --txt:#e8eef7; --muted:#9fb0c9; --teal:#14b8a6; --teal2:#0f766e;
+    --red:#ef4444; --redbg:#3b1418; --yellow:#f59e0b; --yellowbg:#3a2a0a;
+    --green:#22c55e; --greenbg:#0f2e1a; --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    background:linear-gradient(180deg,#0b1220,#0e1526 60%,#0b1220);
+    color:var(--txt);
+    font-family:"Segoe UI",Rubik,Arial,"Noto Sans Hebrew",sans-serif;
+    min-height:100vh; padding:16px; direction:rtl;
+  }
+  .wrap{max-width:560px;margin:0 auto}
+  header{text-align:center;margin-bottom:14px}
+  header h1{font-size:22px;margin:0 0 4px;letter-spacing:.2px}
+  header .sub{color:var(--muted);font-size:13px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+  .btn{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    width:100%;border:0;border-radius:14px;padding:15px 16px;font-size:16px;
+    font-weight:700;cursor:pointer;color:#052; background:var(--teal);
+    transition:transform .06s ease, filter .15s ease;
+  }
+  .btn:active{transform:scale(.98)}
+  .btn.secondary{background:var(--card2);color:var(--txt);border:1px solid var(--line)}
+  .btn.ghost{background:transparent;color:var(--teal);border:1px dashed var(--teal2)}
+  .btn[disabled]{opacity:.5;pointer-events:none}
+  .row{display:flex;gap:10px;margin-top:10px}
+  .row .btn{flex:1}
+  .hint{color:var(--muted);font-size:12.5px;line-height:1.6;margin-top:10px}
+  video,#preview{width:100%;border-radius:14px;background:#000;display:block}
+  #preview{border:1px solid var(--line)}
+  .hidden{display:none!important}
+  /* progress */
+  #progress{margin-top:12px}
+  .bar{height:10px;border-radius:8px;background:var(--card2);overflow:hidden;border:1px solid var(--line)}
+  .bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal2),var(--teal));transition:width .25s ease}
+  .status{font-size:13px;color:var(--muted);margin-top:8px;text-align:center}
+  .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;display:inline-block;animation:sp 0.8s linear infinite;vertical-align:-3px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  /* verdict */
+  .verdict{border-radius:16px;padding:18px;text-align:center;border:1px solid transparent}
+  .verdict .big{font-size:26px;font-weight:800;margin:0}
+  .verdict .desc{margin-top:6px;font-size:14px;opacity:.95}
+  .v-red{background:var(--redbg);border-color:#7f1d1d;color:#fecaca}
+  .v-yellow{background:var(--yellowbg);border-color:#92600a;color:#fde68a}
+  .v-green{background:var(--greenbg);border-color:#14532d;color:#bbf7d0}
+  .v-emoji{font-size:40px;line-height:1;margin-bottom:6px}
+  /* findings */
+  .sec-title{font-size:13px;color:var(--muted);margin:16px 2px 8px;font-weight:700}
+  .item{display:flex;align-items:flex-start;gap:10px;background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:11px 12px;margin-bottom:8px}
+  .badge{flex:none;font-size:11px;font-weight:800;border-radius:999px;padding:4px 9px;white-space:nowrap}
+  .b-red{background:#7f1d1d;color:#fecaca}
+  .b-yellow{background:#92600a;color:#fde68a}
+  .b-blue{background:#1e3a5f;color:#bfdbfe}
+  .item .body{flex:1}
+  .item .name{font-weight:700;font-size:15px}
+  .item .meta{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5}
+  .chip{display:inline-block;background:#0e1a30;border:1px solid var(--line);border-radius:8px;padding:1px 7px;font-size:12px;margin-inline-start:4px;direction:ltr;unicode-bidi:isolate}
+  details{background:var(--card2);border:1px solid var(--line);border-radius:12px;margin-top:10px}
+  summary{cursor:pointer;padding:12px;font-weight:700;font-size:14px;list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸ ";color:var(--teal)}
+  details[open] summary::before{content:"▾ "}
+  .details-body{padding:0 12px 12px;font-size:13.5px;line-height:1.7;color:var(--muted);white-space:pre-wrap;word-break:break-word}
+  .details-body.ltr{direction:ltr;text-align:left;unicode-bidi:isolate}
+  .langs{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .lang{display:flex;align-items:center;gap:6px;background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13px;cursor:pointer;user-select:none}
+  .lang input{accent-color:var(--teal);width:16px;height:16px}
+  .disclaimer{font-size:11.5px;color:var(--muted);line-height:1.7;background:#0e1a30;border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:6px}
+  .toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px;margin-top:12px}
+  .toggle input{width:18px;height:18px;accent-color:var(--teal)}
+  footer{text-align:center;color:var(--muted);font-size:11.5px;margin:18px 0 6px}
+  .err{background:var(--redbg);border:1px solid #7f1d1d;color:#fecaca;border-radius:12px;padding:12px;font-size:13.5px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🌾🔍 סורק גלוטן</h1>
+    <div class="sub">צלמו את טבלת המרכיבים — נזהה גלוטן בכל שפה ונסביר בעברית</div>
+  </header>
+
+  <!-- CAPTURE -->
+  <div class="card" id="captureCard">
+    <img id="preview" class="hidden" alt="תמונה שצולמה">
+
+    <button class="btn" id="fileBtn">📸 צילום / העלאת תמונה</button>
+    <button class="btn secondary hidden" id="retakeBtn" style="margin-top:10px">↺ צילום מחדש</button>
+    <input type="file" id="fileInput" accept="image/*" capture="environment" class="hidden">
+
+    <div class="hint" id="camHint">לחצו כדי לצלם ישירות את טבלת המרכיבים או להעלות תמונה מהגלריה. כוונו שהכיתוב יהיה חד, ממלא את הפריים, בתאורה טובה וללא בוהק. אפשר לצלם גם מקרוב מאוד.</div>
+
+    <div id="progress" class="hidden">
+      <div class="bar"><i id="barFill"></i></div>
+      <div class="status" id="statusTxt"><span class="spinner"></span> מכין…</div>
+    </div>
+    <div id="errBox"></div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="card hidden" id="resultCard"></div>
+
+  <!-- SETTINGS -->
+  <div class="card">
+    <div class="sec-title" style="margin-top:0">⚙️ שפות לזיהוי (OCR)</div>
+    <div class="langs" id="langBox">
+      <label class="lang"><input type="checkbox" value="heb" checked>עברית</label>
+      <label class="lang"><input type="checkbox" value="eng" checked>אנגלית</label>
+      <label class="lang"><input type="checkbox" value="jpn" checked>יפנית</label>
+      <label class="lang"><input type="checkbox" value="fra" checked>צרפתית</label>
+      <label class="lang"><input type="checkbox" value="spa" checked>ספרדית</label>
+      <label class="lang"><input type="checkbox" value="ita" checked>איטלקית</label>
+      <label class="lang"><input type="checkbox" value="deu">גרמנית</label>
+      <label class="lang"><input type="checkbox" value="por">פורטוגזית</label>
+    </div>
+    <div class="hint">ככל שמסמנים פחות שפות — הזיהוי מהיר יותר. הפעלה ראשונה של כל שפה מורידה קובץ נתונים (נשמר במטמון להמשך).</div>
+
+    <label class="toggle">
+      <span>🌐 תרגום עזר לעברית + הרחבת בדיקה (דורש אינטרנט)</span>
+      <input type="checkbox" id="useTranslate" checked>
+    </label>
+
+    <div class="disclaimer">
+      ⚠️ <b>הבהרה חשובה:</b> הכלי הוא כלי עזר בלבד ואינו תחליף לקריאת התווית המקורית או להתייעצות רפואית. זיהוי טקסט (OCR) עלול לטעות, ורכיבים מסוימים עלולים להיות מוסתרים או לא לזוהים. חולי צליאק ורגישים לגלוטן — הסתמכו על הסימון הרשמי של היצרן ובמקרה ספק, הימנעו. אין להסתמך על הכלי כאישור בטיחות מוחלט.
+    </div>
+  </div>
+
+  <footer>פרטי לחלוטין — הצילום והזיהוי מתבצעים במכשיר שלכם. גרסה 1.0</footer>
+</div>
+
+<canvas id="work" class="hidden"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
+<script>
+/* ============================================================
+   מסד נתונים רב-לשוני של מרכיבים המכילים / חשודים בגלוטן
+   level: 'contains' (ודאי) | 'maybe' (חשוד/עקבות)
+   latin: מונחים בכתב לטיני (יושוו אחרי הסרת ניקוד וגבולות מילה)
+   cjk:   מונחים ביפנית/סינית (יושוו כתת-מחרוזת)
+   ============================================================ */
+const GLUTEN_DB = [
+  // ---------- ודאי: דגנים המכילים גלוטן ונגזרותיהם ----------
+  {id:'wheat', he:'חיטה', level:'contains',
+    latin:['wheat','ble','froment','trigo','frumento','grano','grano tenero','weizen','tarwe','pshenitsa'],
+    cjk:['小麦','こむぎ','コムギ']},
+  {id:'wheatflour', he:'קמח חיטה', level:'contains',
+    latin:['wheat flour','farine de ble','harina de trigo','farina di frumento','farina di grano','weizenmehl','farinha de trigo'],
+    cjk:['小麦粉']},
+  {id:'barley', he:'שעורה', level:'contains',
+    latin:['barley','orge','cebada','orzo','gerste','cevada','malted barley'],
+    cjk:['大麦','おおむぎ','オオムギ','麦味噌']},
+  {id:'rye', he:'שיפון', level:'contains',
+    latin:['rye','seigle','centeno','segale','roggen','centeio'],
+    cjk:['ライ麦','ライむぎ','ライムギ']},
+  {id:'malt', he:'מאלט (לתת)', level:'contains',
+    latin:['malt','malte','malz','malto','malta','malt extract','extrait de malt','estratto di malto','malzextrakt','extracto de malta','malt syrup','malt flavor','malt flavour'],
+    cjk:['麦芽','ばくが','モルト']},
+  {id:'spelt', he:'כוסמין', level:'contains',
+    latin:['spelt','dinkel','epeautre','espelta','spelta','farro spelta'],
+    cjk:['スペルト']},
+  {id:'durum', he:'חיטת דורום / סולת', level:'contains',
+    latin:['durum','semolina','semola','semolino','grano duro','ble dur','semoule','hartweizen','griess','semola di grano duro','trigo duro'],
+    cjk:['デュラム','セモリナ']},
+  {id:'farro', he:'פארו / חיטת אמר', level:'contains',
+    latin:['farro','emmer','triticum dicoccum']},
+  {id:'kamut', he:'קמות (חיטת חוראסן)', level:'contains',
+    latin:['kamut','khorasan']},
+  {id:'triticale', he:'טריטיקלה', level:'contains',
+    latin:['triticale']},
+  {id:'bulgur', he:'בורגול', level:'contains',
+    latin:['bulgur','bulghur','boulgour']},
+  {id:'couscous', he:'קוסקוס', level:'contains',
+    latin:['couscous','cuscus','cuscous','kuskus']},
+  {id:'seitan', he:'סייטן / גלוטן חיטה', level:'contains',
+    latin:['seitan','wheat gluten','vital wheat gluten','gluten de ble','glutine di frumento','gluten de trigo'],
+    cjk:['グルテン','麸','ふ']},
+  {id:'wheatbran', he:'סובין חיטה', level:'contains',
+    latin:['wheat bran','son de ble','crusca di grano','crusca di frumento','salvado de trigo','weizenkleie'],
+    cjk:['小麦ふすま','小麦フスマ']},
+  {id:'gluten', he:'גלוטן', level:'contains',
+    latin:['gluten','glutine','klebereiweiss'],
+    cjk:['グルテン']},
+  {id:'hydwheat', he:'חלבון חיטה מהודרל', level:'contains',
+    latin:['hydrolyzed wheat protein','hydrolysed wheat protein','proteine de ble hydrolysee','proteina de trigo hidrolizada'],
+    cjk:['加水分解小麦']},
+  {id:'wheatstarch', he:'עמילן חיטה', level:'contains',
+    note:'בגרסה ייעודית ניתן לייצר עמילן חיטה נטול גלוטן — יש לוודא סימון מפורש',
+    latin:['wheat starch','amidon de ble','weizenstarke','almidon de trigo','amido di frumento'],
+    cjk:['小麦でんぷん','小麦でん粉','小麦澱粉']},
+  {id:'matzo', he:'מצה', level:'contains',
+    latin:['matzo','matzah','matze','matza']},
+  {id:'contains_phrase', he:'הצהרת "מכיל חיטה/גלוטן"', level:'contains',
+    latin:['contains wheat','contains gluten','contient du ble','contient du gluten','contiene trigo','contiene gluten','contiene glutine','enthalt weizen','enthalt gluten'],
+    cjk:['小麦を含む','小麦を使用','一部に小麦を含む','小麦・']},
+
+  // ---------- חשוד / עקבות / דורש בדיקה ----------
+  {id:'soy_sauce', he:'רוטב סויה', level:'maybe',
+    note:'רוב רטבי הסויה — ובמיוחד היפניים (שׁוֹיוּ) — מכילים חיטה. "טמארי" לרוב נטול גלוטן.',
+    latin:['soy sauce','soya sauce','sauce soja','salsa de soja','salsa di soia','sojasauce','shoyu'],
+    cjk:['醤油','しょうゆ','ショウユ','濃口醤油','薄口醤油']},
+  {id:'miso', he:'מיסו', level:'maybe',
+    note:'מיסו-שעורה (麦味噌 "מוגי מיסו") מכיל גלוטן; מיסו אורז לרוב נקי.',
+    latin:['miso'], cjk:['味噌','みそ']},
+  {id:'oats', he:'שיבולת שועל', level:'maybe',
+    note:'נטולת גלוטן מטבעה, אך מזוהמת לרוב בחיטה בעיבוד. בטוחה רק אם מסומנת "נטול גלוטן".',
+    latin:['oats','oat','oatmeal','oat flour','rolled oats','avoine','avena','hafer','aveia'],
+    cjk:['オーツ','オート麦','燕麦','えんばく','オートミール']},
+  {id:'modstarch', he:'עמילן מותמר', level:'maybe',
+    note:'מקור לא ידוע — עשוי להיות מחיטה. לוודא מול היצרן.',
+    latin:['modified starch','modified food starch','amidon modifie','almidon modificado','amido modificato','modifizierte starke'],
+    cjk:['加工でん粉','加工デンプン','加工澱粉']},
+  {id:'maltodextrin', he:'מלטודקסטרין', level:'maybe',
+    note:'כמעט תמיד נטול גלוטן; במקרים נדירים באירופה מופק מחיטה ואז מסומן.',
+    latin:['maltodextrin','maltodextrine','maltodextrina'],
+    cjk:['マルトデキストリン']},
+  {id:'dextrin', he:'דקסטרין', level:'maybe',
+    note:'עשוי להיות מופק מחיטה — לוודא מקור.',
+    latin:['dextrin','dextrine','dextrina'],
+    cjk:['デキストリン']},
+  {id:'yeastextract', he:'תמצית שמרים / שמרי בירה', level:'maybe',
+    note:'לעיתים גדלים על מצע שעורה — עשוי להכיל עקבות גלוטן.',
+    latin:['brewers yeast','yeast extract','extrait de levure','levadura de cerveza']},
+];
+
+/* מונחי "נטול גלוטן" — טענת יצרן */
+const FREE_CLAIM = {
+  latin:['gluten free','glutenfree','sans gluten','sin gluten','senza glutine','glutenfrei','ohne gluten','sem gluten'],
+  cjk:['グルテンフリー','グルテン不使用','小麦不使用','小麦を使用していません'],
+  heb:['ללא גלוטן','נטול גלוטן','נטולת גלוטן','נטולי גלוטן','ללא חיטה','נטול חיטה']
+};
+
+/* מונחי גלוטן בעברית — ממופים ל-id של מושג קיים במסד */
+const HEB_TERMS = [
+  {id:'gluten',      t:['גלוטן']},
+  {id:'wheat',       t:['חיטה','חיטת','קמח חיטה','חלבון חיטה','נבט חיטה','דגני חיטה']},
+  {id:'barley',      t:['שעורה','שעורים','שעורת']},
+  {id:'rye',         t:['שיפון']},
+  {id:'oats',        t:['שיבולת שועל','שיבולת-שועל','שבולת שועל','שיבולי שועל']},
+  {id:'malt',        t:['מאלט','לתת','תמצית לתת','שעורת לתת']},
+  {id:'spelt',       t:['כוסמין']},
+  {id:'durum',       t:['סולת','חיטת דורום','דורום','סמולינה']},
+  {id:'bulgur',      t:['בורגול']},
+  {id:'couscous',    t:['קוסקוס','פתיתים']},
+  {id:'wheatbran',   t:['סובין חיטה','סובין']},
+  {id:'wheatstarch', t:['עמילן חיטה']},
+  {id:'matzo',       t:['מצה','קמח מצה']},
+  {id:'seitan',      t:['סייטן']},
+  {id:'triticale',   t:['טריטיקלה']},
+];
+const GLUTEN_BY_ID = Object.fromEntries(GLUTEN_DB.map(c=>[c.id,c]));
+
+/* לידי-פתיחה של הצהרת "עלול להכיל / עקבות" (מנוטרלים כדי לא לדווח "מכיל") */
+const TRACE_LEADS = [' may contain',' trace of',' traces of',' traces ',' peut contenir',' traces de',' puede contener',' trazas de',' trazas ',' puo contenere',' tracce di',' tracce ',' spuren von',' a pu contenir'];
+const TRACE_LEADS_HEB = ['עלול להכיל','עלולה להכיל','עלולים להכיל','עלול להכיל שאריות','עלול לה כיל','עקבות של','שאריות של','ייתכן שמכיל','ייצור במפעל'];
+
+/* דגנים/מקורות בטוחים שמנטרלים התרעת "קמח/עמילן כללי" */
+const SAFE_GRAINS = 'rice|corn|maize|mais|maiz|riso|riz|arroz|reis|almond|amande|mandorla|mandel|tapioca|potato|patata|kartoffel|chickpea|ceci|garbanzo|soy|soja|coconut|coco|buckwheat|sarrasin|grano saraceno|millet|sorghum|teff|quinoa|pea|pois|guisante|banana|platano|cassava|lupin|castagna|chestnut|oat|avena|avoine';
+
+/* ---------- נירמול טקסט ---------- */
+function rawNorm(s){
+  return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+}
+function latinNormText(s){
+  // מסיר ניקוד, מחליף מקפים/פיסוק ברווח, גבולות מילה נקיים
+  let t = rawNorm(s).replace(/[-_/]/g,' ').replace(/[^\p{L}\p{N}\s]/gu,' ').replace(/\s+/g,' ').trim();
+  return ' ' + t + ' ';
+}
+
+/* פיצול לפסוקיות לפי סימני פיסוק (כולל פיסוק CJK ושורות) */
+function splitClauses(text){
+  return rawNorm(text)
+    .split(/[\n\r,.;:!?()\[\]{}\/|•·×*=+…、，。；：！？（）「」『』【】・〜~]+/)
+    .map(s=>s.trim()).filter(Boolean);
+}
+
+/* בדיקות "קמח כללי" / "עמילן כללי" על פסוקית מנוטרלת */
+function genericChecks(cp, add){
+  const CONN='(?:de|di|d|of|al|a la|aux|au)';
+  const FLOUR='(?:flour|farine|harina|farina|mehl|farinha)';
+  const STARCH='(?:starch|amidon|almidon|amido|starke|fecola|feculent)';
+  // קמח
+  let t2 = cp
+    .replace(new RegExp(' (?:'+SAFE_GRAINS+') '+FLOUR+' ','g'),'  ')
+    .replace(new RegExp(' '+FLOUR+' '+CONN+' (?:'+SAFE_GRAINS+') ','g'),'  ');
+  const hasWheatWord = / (wheat|ble|froment|trigo|frumento|grano|weizen|tarwe) /.test(cp);
+  if(!hasWheatWord && new RegExp(' '+FLOUR+' ').test(t2)){
+    add({id:'genflour', he:'קמח (סוג לא מצוין)', level:'maybe',
+         note:'לא צוין מאיזה דגן הקמח — ייתכן חיטה. יש לבדוק מול הרשימה המלאה.'}, 'flour');
+  }
+  // עמילן
+  let t3 = cp
+    .replace(new RegExp(' (?:'+SAFE_GRAINS+') '+STARCH+' ','g'),'  ')
+    .replace(new RegExp(' '+STARCH+' '+CONN+' (?:'+SAFE_GRAINS+') ','g'),'  ');
+  const isModified = / modif/.test(cp);
+  const hasWheatStarch = new RegExp(' (?:wheat|ble|trigo|frumento|weizen) '+STARCH+' ').test(cp);
+  if(!isModified && !hasWheatStarch && new RegExp(' '+STARCH+' ').test(t3)){
+    add({id:'genstarch', he:'עמילן (מקור לא מצוין)', level:'maybe',
+         note:'לרוב מתירס/תפוח-אדמה ובטוח; אם המקור אינו מצוין — יש לוודא.'}, 'starch');
+  }
+}
+
+/* ---------- מנוע הסריקה (מבוסס פסוקיות) ---------- */
+function scanText(text, source){
+  const found = new Map(); // id -> {concept, hits:Set}
+  function add(concept, hit){
+    if(!found.has(concept.id)) found.set(concept.id, {c:concept, hits:new Set()});
+    found.get(concept.id).hits.add(hit);
+  }
+
+  let freeClaim=false, traceHit=false;
+
+  for(const clause of splitClauses(text)){
+    let cp = latinNormText(clause);   // ' ...מנוטרל... '
+    let cr = clause;                  // כבר עבר rawNorm
+
+    // (א) ניטרול הצהרת "נטול גלוטן" — מסירים את הביטוי בלבד
+    FREE_CLAIM.latin.forEach(t=>{ if(cp.includes(' '+t+' ')){ freeClaim=true; cp=cp.split(' '+t+' ').join('   '); }});
+    FREE_CLAIM.cjk.forEach(t=>{ if(cr.includes(t)){ freeClaim=true; cr=cr.split(t).join(' '); }});
+    (FREE_CLAIM.heb||[]).forEach(t=>{ if(cr.includes(t)){ freeClaim=true; cr=cr.split(t).join(' '); }});
+
+    // (ב) פסוקית "עלול להכיל / עקבות"? מנטרלים מונחי-דגן ודאיים כדי שידווחו כ"חשוד"
+    const traceLead = TRACE_LEADS.some(l=> cp.includes(l))
+                   || (cp.includes(' kann ') && cp.includes('enthalten'))
+                   || TRACE_LEADS_HEB.some(l=> cr.includes(l))
+                   || /を含む製品|同じ製造|共通の(設備|ライン)|と同一の/.test(cr);
+    if(traceLead){
+      let grainPresent=false;
+      for(const c of GLUTEN_DB){
+        if(c.level!=='contains') continue;
+        (c.latin||[]).forEach(t=>{ if(cp.includes(' '+t+' ')){ grainPresent=true; cp=cp.split(' '+t+' ').join('   '); }});
+        (c.cjk||[]).forEach(t=>{ if(cr.includes(t)){ grainPresent=true; cr=cr.split(t).join(' '); }});
+      }
+      // מונחי דגן בעברית ברמת "מכיל"
+      HEB_TERMS.forEach(h=>{ const c=GLUTEN_BY_ID[h.id]; if(c && c.level==='contains')
+        h.t.forEach(t=>{ if(cr.includes(t)){ grainPresent=true; cr=cr.split(t).join(' '); }}); });
+      if(grainPresent) traceHit=true;
+    }
+
+    // (ג) סריקת המסד על הפסוקית המנוטרלת
+    for(const c of GLUTEN_DB){
+      let hit=null;
+      (c.latin||[]).forEach(t=>{ if(cp.includes(' '+t+' ')) hit=t; });
+      (c.cjk||[]).forEach(t=>{ if(cr.includes(t)) hit=t; });
+      if(hit) add(c, hit);
+    }
+    // (ג2) סריקת מונחי עברית
+    for(const h of HEB_TERMS){
+      const c=GLUTEN_BY_ID[h.id]; if(!c) continue;
+      let hit=null;
+      h.t.forEach(t=>{ if(cr.includes(t)) hit=t; });
+      if(hit) add(c, hit);
+    }
+
+    // (ד) קמח/עמילן כללי
+    genericChecks(cp, add);
+  }
+
+  if(traceHit){
+    add({id:'traces', he:'הצהרת עקבות / "עלול להכיל"', level:'maybe',
+         note:'זיהום צולב אפשרי בקו הייצור. מומלץ להימנע במקרה של רגישות גבוהה.'}, 'עקבות');
+  }
+
+  const list = [...found.values()].map(v=>({
+    id:v.c.id, he:v.c.he, level:v.c.level, note:v.c.note||'', hits:[...v.hits]
+  }));
+  list.sort((a,b)=> (a.level==='contains'?0:1) - (b.level==='contains'?0:1));
+
+  const hasContains = list.some(x=>x.level==='contains');
+  const hasMaybe = list.some(x=>x.level==='maybe');
+  const verdict = hasContains ? 'contains' : (hasMaybe ? 'maybe' : 'none');
+
+  return {verdict, list, freeClaim, hasContains, hasMaybe, source:source||''};
+}
+
+/* ============================================================
+   זיהוי שפת מקור (היוריסטי) עבור תרגום העזר
+   ============================================================ */
+function detectLang(text){
+  if(/[֐-׿]/.test(text)) return 'he';
+  if(/[぀-ヿ一-鿿]/.test(text)) return 'ja';
+  if(/[Ѐ-ӿ]/.test(text)) return 'ru';
+  const t=' '+rawNorm(text)+' ';
+  const cnt=(re)=> (t.match(re)||[]).length;
+  const score={
+    fr: cnt(/ (et|de la|des|sans|avec|farine|sucre|lait|sel|eau|contient|arome|peut) /g),
+    es: cnt(/ (y|de|con|sin|azucar|leche|sal|agua|harina|puede|trigo|contiene|aroma) /g),
+    it: cnt(/ (e|di|con|senza|zucchero|latte|sale|acqua|farina|puo|contiene|aroma) /g),
+    de: cnt(/ (und|mit|ohne|zucker|milch|salz|wasser|mehl|kann|enthalt|weizen) /g),
+    pt: cnt(/ (e|de|com|sem|acucar|leite|sal|agua|farinha|pode|contem|aroma) /g),
+    en: cnt(/ (and|with|without|sugar|milk|salt|water|flour|may|contains|wheat|ingredients) /g),
+  };
+  let best='en', bv=-1;
+  for(const k in score){ if(score[k]>bv){bv=score[k];best=k;} }
+  return best;
+}
+
+/* תרגום גיבוי דרך MyMemory (תומך CORS מהדפדפן) */
+async function mmTranslate(text, from, to){
+  const clean = text.replace(/\s+/g,' ').trim();
+  if(!clean) return '';
+  // חלוקה למקטעים של ~450 תווים על גבול רווח
+  const chunks=[]; let buf='';
+  for(const w of clean.split(' ')){
+    if((buf+' '+w).length>450){ chunks.push(buf); buf=w; }
+    else buf = buf? buf+' '+w : w;
+  }
+  if(buf) chunks.push(buf);
+  const out=[];
+  for(const c of chunks){
+    const url='https://api.mymemory.translated.net/get?q='+encodeURIComponent(c)+'&langpair='+encodeURIComponent(from+'|'+to);
+    const r=await fetch(url);
+    if(!r.ok) throw new Error('translate http '+r.status);
+    const j=await r.json();
+    const tt=j && j.responseData && j.responseData.translatedText;
+    if(tt) out.push(tt);
+  }
+  return out.join(' ');
+}
+
+/* ============================================================
+   ממשק: מצלמה, OCR, תרגום, תצוגה
+   ============================================================ */
+const $=(id)=>document.getElementById(id);
+const preview=$('preview'), work=$('work');
+const fileBtn=$('fileBtn'), retakeBtn=$('retakeBtn'), fileInput=$('fileInput');
+const progress=$('progress'), barFill=$('barFill'), statusTxt=$('statusTxt');
+const resultCard=$('resultCard'), errBox=$('errBox');
+
+function showErr(msg){ errBox.innerHTML='<div class="err">⚠️ '+msg+'</div>'; }
+function clearErr(){ errBox.innerHTML=''; }
+function setStatus(txt, pct){
+  progress.classList.remove('hidden');
+  statusTxt.innerHTML='<span class="spinner"></span> '+txt;
+  if(typeof pct==='number') barFill.style.width=Math.max(2,Math.min(100,pct))+'%';
+}
+function endStatus(){ progress.classList.add('hidden'); barFill.style.width='0'; }
+
+/* ---- צילום / העלאת תמונה ---- */
+fileBtn.addEventListener('click', ()=>{ clearErr(); fileInput.click(); });
+fileInput.addEventListener('change', (e)=>{
+  const f=e.target.files && e.target.files[0];
+  if(!f) return;
+  const reader=new FileReader();
+  reader.onload=()=>{ showPreview(reader.result); runOCR(reader.result); };
+  reader.readAsDataURL(f);
+  e.target.value='';
+});
+retakeBtn.addEventListener('click', resetUI);
+
+function showPreview(src){
+  preview.src=src; preview.classList.remove('hidden');
+  retakeBtn.classList.remove('hidden');
+  $('camHint').classList.add('hidden');
+}
+function resetUI(){
+  resultCard.classList.add('hidden'); resultCard.innerHTML='';
+  preview.classList.add('hidden'); preview.src='';
+  retakeBtn.classList.add('hidden');
+  $('camHint').classList.remove('hidden');
+  clearErr(); endStatus();
+}
+
+/* ---- עיבוד תמונה לשיפור OCR (גווני אפור + הגדלה) ---- */
+function preprocess(dataURL){
+  return new Promise((resolve)=>{
+    const img=new Image();
+    img.onload=()=>{
+      let {width:w,height:h}=img;
+      const maxDim=1800, scale=Math.min(1, maxDim/Math.max(w,h));
+      // מגדילים תמונות קטנות לשיפור זיהוי
+      const up = Math.max(scale, Math.min(2, 1400/Math.max(w,h)));
+      w=Math.round(w*up); h=Math.round(h*up);
+      work.width=w; work.height=h;
+      const ctx=work.getContext('2d');
+      ctx.drawImage(img,0,0,w,h);
+      try{
+        const im=ctx.getImageData(0,0,w,h), d=im.data;
+        for(let i=0;i<d.length;i+=4){
+          let g=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2];
+          g=(g-128)*1.35+128;            // הגברת ניגודיות
+          g=g<0?0:g>255?255:g;
+          d[i]=d[i+1]=d[i+2]=g;
+        }
+        ctx.putImageData(im,0,0);
+      }catch(e){/* אם getImageData נחסם — משתמשים בתמונה כמות שהיא */}
+      resolve(work.toDataURL('image/png'));
+    };
+    img.onerror=()=>resolve(dataURL);
+    img.src=dataURL;
+  });
+}
+
+/* ---- שפות OCR נבחרות ---- */
+function selectedLangs(){
+  const boxes=[...document.querySelectorAll('#langBox input:checked')].map(b=>b.value);
+  return boxes.length? boxes.join('+') : 'eng';
+}
+
+/* ---- הרצת OCR + סריקה + תרגום ---- */
+let running=false;
+async function runOCR(dataURL){
+  if(running) return; running=true;
+  clearErr(); resultCard.classList.add('hidden'); resultCard.innerHTML='';
+  if(typeof Tesseract==='undefined'){
+    showErr('מנוע זיהוי הטקסט לא נטען. ודאו חיבור לאינטרנט בפתיחה הראשונה ורעננו את הדף.');
+    running=false; endStatus(); return;
+  }
+  let worker;
+  try{
+    setStatus('מעבד את התמונה…', 4);
+    const proc=await preprocess(dataURL);
+    const langs=selectedLangs();
+    setStatus('טוען מנוע זיהוי ('+langs.replace(/\+/g,', ')+')…', 8);
+    worker=await Tesseract.createWorker(langs, 1, {
+      logger:m=>{
+        if(m.status==='recognizing text') setStatus('קורא את המרכיבים…', 30+m.progress*60);
+        else if(/load|initial/i.test(m.status)) setStatus('טוען נתוני שפה…', 8+ (m.progress||0)*18);
+      }
+    });
+    const {data}=await worker.recognize(proc);
+    await worker.terminate(); worker=null;
+    const text=(data && data.text || '').trim();
+
+    if(!text || text.replace(/\s/g,'').length<2){
+      endStatus();
+      renderResult(scanText('',''), text, null);
+      showErr('לא זוהה טקסט ברור בתמונה. נסו לצלם מקרוב יותר, בתאורה טובה, כשהכיתוב חד וממלא את הפריים.');
+      running=false; return;
+    }
+
+    setStatus('מנתח מרכיבים…', 94);
+    const result=scanText(text, 'ocr');
+
+    // ---- תרגום עזר + הרחבת בדיקה ----
+    let translation=null;
+    if($('useTranslate').checked && navigator.onLine){
+      try{
+        setStatus('מתרגם לעברית ומרחיב בדיקה…', 97);
+        const src=detectLang(text);
+        if(src!=='he'){
+          const he=await mmTranslate(text, src, 'he');
+          translation={src, he};
+          // הרחבת בדיקה: תרגום לאנגלית וסריקה חוזרת
+          if(src!=='en'){
+            const en=await mmTranslate(text, src, 'en');
+            const extra=scanText(en, 'translation');
+            mergeExtra(result, extra);
+          }
+        }
+      }catch(e){ translation={error:true}; }
+    }
+
+    endStatus();
+    renderResult(result, text, translation);
+  }catch(err){
+    if(worker){ try{await worker.terminate();}catch(_){}}
+    endStatus();
+    showErr('אירעה תקלה בזיהוי: '+(err && err.message ? err.message : err)+'. נסו שוב או צלמו תמונה ברורה יותר.');
+  }
+  running=false;
+}
+
+/* מיזוג ממצאים מהתרגום שלא נמצאו במקור */
+function mergeExtra(base, extra){
+  const ids=new Set(base.list.map(x=>x.id));
+  extra.list.forEach(x=>{
+    if(!ids.has(x.id)){ x.fromTranslation=true; base.list.push(x); ids.add(x.id); }
+  });
+  base.list.sort((a,b)=> (a.level==='contains'?0:1)-(b.level==='contains'?0:1));
+  base.hasContains=base.list.some(x=>x.level==='contains');
+  base.hasMaybe=base.list.some(x=>x.level==='maybe');
+  base.verdict = base.hasContains?'contains':(base.hasMaybe?'maybe':'none');
+  if(extra.freeClaim) base.freeClaim=true;
+}
+
+/* ---- תצוגת התוצאה ---- */
+function esc(s){ return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function renderResult(res, rawText, translation){
+  const containsNames=[...new Set(res.list.filter(x=>x.level==='contains').map(x=>x.he))];
+  const maybeNames=[...new Set(res.list.filter(x=>x.level==='maybe').map(x=>x.he))];
+
+  let v, vClass, emoji, desc;
+  if(res.verdict==='contains'){
+    v='מכיל גלוטן'; vClass='v-red'; emoji='⛔';
+    desc='זוהו המרכיבים הבאים המכילים גלוטן: <b>'+containsNames.map(esc).join('، ')+'</b>.';
+  }else if(res.verdict==='maybe'){
+    v='ייתכן שמכיל גלוטן'; vClass='v-yellow'; emoji='⚠️';
+    desc='זוהו מרכיבים חשודים / הצהרת עקבות: <b>'+maybeNames.map(esc).join('، ')+'</b>. נדרשת בדיקה מול היצרן.';
+  }else{
+    v='לא זוהה גלוטן'; vClass='v-green'; emoji='✅';
+    desc='לא נמצאו מרכיבים המכילים גלוטן ברשימה שזוהתה. אין זה אישור בטיחות מוחלט — יש לוודא מול התווית המקורית.';
+  }
+
+  let html='<div class="verdict '+vClass+'"><div class="v-emoji">'+emoji+'</div>'
+         +'<p class="big">'+v+'</p><p class="desc">'+desc+'</p></div>';
+
+  if(res.freeClaim){
+    html+='<div class="item" style="margin-top:10px"><span class="badge b-blue">מידע</span>'
+        +'<div class="body"><div class="name">🏷️ סומן "נטול גלוטן"</div>'
+        +'<div class="meta">'+(res.hasContains
+            ? 'שימו לב לסתירה: על האריזה מופיעה טענת "נטול גלוטן" אך זוהו גם מרכיבים המכילים גלוטן — ייתכן שגיאת זיהוי (OCR) או שהמילים שייכות למשפט "ללא". בדקו את התווית המקורית.'
+            : 'על האריזה מופיעה טענת יצרן "נטול גלוטן".')
+        +'</div></div></div>';
+  }
+
+  const contains=res.list.filter(x=>x.level==='contains');
+  const maybe=res.list.filter(x=>x.level==='maybe');
+
+  if(contains.length){
+    html+='<div class="sec-title">🔴 מרכיבים המכילים גלוטן</div>';
+    contains.forEach(x=> html+=itemHTML(x,'b-red'));
+  }
+  if(maybe.length){
+    html+='<div class="sec-title">🟡 חשוד / דורש בדיקה</div>';
+    maybe.forEach(x=> html+=itemHTML(x,'b-yellow'));
+  }
+  if(!contains.length && !maybe.length){
+    html+='<div class="item"><span class="badge b-blue">✓</span><div class="body">'
+        +'<div class="name">לא נמצאו מונחי גלוטן ידועים</div>'
+        +'<div class="meta">מומלץ בכל זאת לעבור על התרגום המלא למטה ולוודא מול התווית המקורית.</div>'
+        +'</div></div>';
+  }
+
+  if(translation && translation.he){
+    html+='<details><summary>🌐 תרגום המרכיבים לעברית'
+        +' (מ'+langName(translation.src)+')</summary>'
+        +'<div class="details-body">'+esc(translation.he)+'</div></details>';
+  }else if(translation && translation.error){
+    html+='<div class="hint">🌐 תרגום העזר אינו זמין כרגע (בעיית רשת). הזיהוי מבוסס על המילון המקומי.</div>';
+  }
+
+  if(rawText){
+    html+='<details><summary>📄 הטקסט שזוהה מהתמונה (מקור)</summary>'
+        +'<div class="details-body ltr">'+esc(rawText)+'</div></details>';
+  }
+
+  html+='<div class="row"><button class="btn" onclick="location.reload()">📸 סריקה חדשה</button></div>';
+
+  resultCard.innerHTML=html;
+  resultCard.classList.remove('hidden');
+  resultCard.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function itemHTML(x, badgeClass){
+  const label = x.level==='contains' ? 'מכיל' : 'חשוד';
+  const hits = x.hits && x.hits.length ? x.hits.slice(0,4).map(h=>'<span class="chip">'+esc(h)+'</span>').join('') : '';
+  const src = x.fromTranslation ? '<span class="chip">מהתרגום</span>' : '';
+  return '<div class="item"><span class="badge '+badgeClass+'">'+label+'</span>'
+    +'<div class="body"><div class="name">'+esc(x.he)+'</div>'
+    +(x.note?'<div class="meta">'+esc(x.note)+'</div>':'')
+    +(hits||src?'<div class="meta">זוהה: '+hits+' '+src+'</div>':'')
+    +'</div></div>';
+}
+
+function langName(code){
+  return {ja:'יפנית',en:'אנגלית',fr:'צרפתית',es:'ספרדית',it:'איטלקית',de:'גרמנית',pt:'פורטוגזית',ru:'רוסית'}[code]||code;
+}
+
+/* חשיפת הפונקציות לבדיקה */
+window.__scan=scanText; window.__detect=detectLang;
+</script>
+</body>
+</html>
